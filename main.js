@@ -49,10 +49,21 @@ function loadTab(tabName) {
 
       content.innerHTML = html;
 
-      // 🔽 Załaduj skrypt tab3 jeśli potrzebny
       if (tabName === "tab3") {
-        setTimeout(() => loadScript("script3.js"), 50); // krótka przerwa na wstawienie HTML
+        // Ładuj skrypt i po załadowaniu uruchom initializeTab3
+        setTimeout(() => {
+          loadScript("script3.js", () => {
+            if (typeof initializeTab3 === "function") {
+              initializeTab3();
+            } else {
+              console.error("initializeTab3() nie jest zdefiniowane.");
+            }
+          });
+        }, 50);
       }
+
+      // Możesz dodać inne taby podobnie, np.:
+      // if (tabName === "tab4") { ... }
     })
     .catch(err => {
       document.getElementById("tabContent").innerHTML =
@@ -60,13 +71,22 @@ function loadTab(tabName) {
     });
 }
 
-// 🔽 Funkcja do ładowania skryptu
-function loadScript(src) {
+// 🔽 Funkcja do ładowania skryptu JS z callbackiem
+function loadScript(src, callback) {
   const existing = document.querySelector(`script[src="${src}"]`);
   if (existing) existing.remove();
 
   const script = document.createElement("script");
   script.src = src;
   script.defer = true;
+
+  script.onload = () => {
+    if (typeof callback === "function") callback();
+  };
+
+  script.onerror = () => {
+    console.error(`Nie udało się załadować skryptu: ${src}`);
+  };
+
   document.body.appendChild(script);
 }

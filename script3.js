@@ -1052,12 +1052,12 @@ function degToDirection(deg) {
   return dirs[Math.round(deg / 45) % 8];
 }
 
-addResponderLine();
-addActionLine();
-setupInteractiveHandlers();
-addPoziomLine(false);
-addHydrantLine();
-document.addEventListener("DOMContentLoaded", () => {
+function initializeTab3() {
+  addResponderLine();
+  addActionLine();
+  setupInteractiveHandlers();
+  addPoziomLine(false);
+  addHydrantLine();
   loadHydrantJsonAutomatically();
   fetchWeatherFromIMGW();
-});
+}
