@@ -816,7 +816,7 @@ function addPoziomLine(isDuplicate = false) {
   deleteBtn.textContent = "🗑️ Usuń";
   deleteBtn.setAttribute("aria-hidden", "true");
   deleteBtn.setAttribute("draggable", "false");
-  deleteBtn.setAttribute("contenteditable", "false"); // <-- to ważne
+  deleteBtn.setAttribute("contenteditable", "false"); 
   deleteBtn.style = `
     margin-left: 10px;
     background: #fdd;
@@ -1072,4 +1072,4 @@ function initializeTab3() {
   addHydrantLine();
   loadHydrantJsonAutomatically();
   fetchWeatherFromIMGW();
-}
+}}
