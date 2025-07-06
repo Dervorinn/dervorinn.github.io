@@ -25,25 +25,7 @@
       v 0.5 200725
     </div>
   </div>
-  <div id="tabContent" style="padding: 16px;"></div>
+  <div id="tabContent" style="padding: 16px; padding-top: 100px;"></div>
   <script src="main.js"></script>
 </body>
 </html>
-<script>
-function loadTab(url) {
-  fetch(url)
-    .then(res => {
-      if (!res.ok) throw new Error("Błąd ładowania: " + res.status);
-      return res.text();
-    })
-    .then(html => {
-      document.getElementById("tabContent").innerHTML = html;
-    })
-    .catch(err => {
-      document.getElementById("tabContent").innerHTML = `<p style="color:red;">Nie udało się załadować zakładki.<br>${err.message}</p>`;
-    });
-}
-document.addEventListener("DOMContentLoaded", () => {
-  loadTab("tab3.html");
-});
-</script>

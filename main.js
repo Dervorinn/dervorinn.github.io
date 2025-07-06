@@ -30,3 +30,37 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error("Nie znaleziono logo lub span.");
   }
 });
+function loadTab(tabName) {
+  fetch(`${tabName}.html`)
+    .then(res => {
+      if (!res.ok) throw new Error("Błąd ładowania: " + res.status);
+      return res.text();
+    })
+    .then(html => {
+      document.getElementById("tabContent").innerHTML = html;
+
+      // 🔽 Załaduj odpowiedni skrypt
+      if (tabName === "tab3") {
+        loadScript("script3.js");
+      }
+      // jeśli masz inne skrypty do innych zakładek, możesz je tu dopisać
+    })
+    .catch(err => {
+      document.getElementById("tabContent").innerHTML =
+        `<p style="color:red;">Nie udało się załadować zakładki.<br>${err.message}</p>`;
+    });
+}
+
+function loadScript(src) {
+  const existing = document.querySelector(`script[src="${src}"]`);
+  if (existing) existing.remove(); // usuń stary, jeśli istnieje
+
+  const script = document.createElement("script");
+  script.src = src;
+  script.defer = true;
+  document.body.appendChild(script);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadTab("tab3");
+});
