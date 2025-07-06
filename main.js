@@ -1,6 +1,3 @@
-function loadTab(tabName) {
-  document.getElementById('tabFrame').src = tabName + '.html';
-}
 document.addEventListener('DOMContentLoaded', () => {
   const logo = document.querySelector('.navbar-logo');
   const span = document.getElementById('logoText');
