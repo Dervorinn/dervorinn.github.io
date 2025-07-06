@@ -43,8 +43,6 @@ function loadTab(url) {
       document.getElementById("tabContent").innerHTML = `<p style="color:red;">Nie udało się załadować zakładki.<br>${err.message}</p>`;
     });
 }
-
-// Załaduj domyślną zakładkę przy starcie
 document.addEventListener("DOMContentLoaded", () => {
   loadTab("tab3.html");
 });

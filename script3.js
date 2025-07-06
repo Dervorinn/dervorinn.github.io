@@ -473,7 +473,6 @@ ulInput.style.marginBottom = "6px";
 ulInput.value = span.dataset.ul || "";
 menu.appendChild(ulInput);
 
-// 🔻 Kontener na podpowiedzi
 const ulList = document.createElement("ul");
 ulList.className = "suggestion-list";
 ulList.style.position = "absolute";
@@ -1030,6 +1029,60 @@ function degToDirection(deg) {
   const dirs = ["północny", "północno-wschodni", "wschodni", "południowo-wschodni", "południowy", "południowo-zachodni", "zachodni", "północno-zachodni"];
   return dirs[Math.round(deg / 45) % 8];
 }
+
+function updateRadioText(span) {
+  const channel = span.dataset.channel || "";
+  span.textContent = channel;
+}
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("radio-span")) {
+    const span = e.target;
+
+    const menu = document.createElement("div");
+    menu.style.position = "absolute";
+    menu.style.background = "#fff";
+    menu.style.border = "1px solid #ccc";
+    menu.style.padding = "4px 8px";
+    menu.style.zIndex = "9999";
+
+    const options = ["B004", "B049", "B050"];
+    options.forEach(opt => {
+      const btn = document.createElement("div");
+      btn.textContent = opt;
+      btn.style.cursor = "pointer";
+      btn.style.padding = "4px";
+      btn.addEventListener("click", () => {
+        span.dataset.channel = opt;
+        updateRadioText(span);
+        document.body.removeChild(menu);
+      });
+      menu.appendChild(btn);
+    });
+
+    // Pozycjonuj menu
+    const rect = span.getBoundingClientRect();
+    menu.style.left = `${rect.left + window.scrollX}px`;
+    menu.style.top = `${rect.bottom + window.scrollY}px`;
+
+    document.body.appendChild(menu);
+
+    const outsideClick = (ev) => {
+      if (!menu.contains(ev.target)) {
+        document.body.removeChild(menu);
+        document.removeEventListener("click", outsideClick);
+      }
+    };
+
+    setTimeout(() => {
+      document.addEventListener("click", outsideClick);
+    }, 0);
+  }
+});
+
+document.querySelectorAll(".radio-span").forEach(span => {
+  updateRadioText(span);
+});
+
 addResponderLine();
 addActionLine();
 setupInteractiveHandlers();
