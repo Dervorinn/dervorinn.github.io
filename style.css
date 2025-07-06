@@ -415,3 +415,8 @@ h1 {
 #pressureVal::placeholder {
   color: #999;
 }
+
+#tabContent {
+  padding: 100px 16px 16px;
+  box-sizing: border-box;
+}
