@@ -742,7 +742,7 @@ if (weatherDataAuto) {
       
 }
       else if (el.classList.contains("kanal-kom")) {
-  const kanały = ["B004","B025", "B028", "B049", "B050", "B051", "B060",];
+  const kanały = ["B004","B025", "B028", "B049", "B050",];
 
   kanały.forEach(opt => {
     const li = document.createElement("li");
@@ -811,32 +811,43 @@ function addPoziomLine(isDuplicate = false) {
   `;
 
   if (isDuplicate) {
-    const deleteBtn = document.createElement("button");
-    deleteBtn.className = "delete-btn";
-    deleteBtn.textContent = "🗑️ Usuń";
-    deleteBtn.style = "margin-left: 10px; background: #fdd; border: 1px solid #c00; color: #600; cursor: pointer; border-radius: 4px; padding: 2px 6px;";
-    deleteBtn.setAttribute("aria-hidden", "true");
-    deleteBtn.setAttribute("draggable", "false");
-    deleteBtn.addEventListener("click", () => {
-      line.remove();
-      const brToRemove = container.querySelector(`br[data-line-id="${lineId}"]`);
-      if (brToRemove) brToRemove.remove();
-    });
+  const deleteBtn = document.createElement("button");
+  deleteBtn.className = "delete-btn";
+  deleteBtn.textContent = "🗑️ Usuń";
+  deleteBtn.setAttribute("aria-hidden", "true");
+  deleteBtn.setAttribute("draggable", "false");
+  deleteBtn.setAttribute("contenteditable", "false"); // <-- to ważne
+  deleteBtn.style = `
+    margin-left: 10px;
+    background: #fdd;
+    border: 1px solid #c00;
+    color: #600;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 2px 6px;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+  `;
 
-    line.appendChild(deleteBtn);
-  }
+  deleteBtn.addEventListener("click", () => {
+    line.remove();
+    const brToRemove = container.querySelector(`br[data-line-id="${lineId}"]`);
+    if (brToRemove) brToRemove.remove();
+  });
 
-  const container = document.getElementById("poziomContainer");
-  container.appendChild(line);
-
-  const spacer = document.createElement("br");
-  spacer.dataset.lineId = lineId;
-  container.appendChild(spacer);
-
-  setupInteractiveHandlers();
-  updatePoziomPunctuation();
+  line.appendChild(deleteBtn);
 }
 
+const container = document.getElementById("poziomContainer");
+container.appendChild(line);
+
+const spacer = document.createElement("br");
+spacer.dataset.lineId = lineId;
+container.appendChild(spacer);
+
+setupInteractiveHandlers();
+updatePoziomPunctuation();
 
 function updatePoziomText(span) {
   span.classList.add("updating");
