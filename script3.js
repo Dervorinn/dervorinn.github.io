@@ -1,5 +1,4 @@
 let hydrantJsonData = [];
-
 function loadHydrantJsonAutomatically() {
   fetch("hydrantykato.json")
     .then(response => response.json())
@@ -244,7 +243,8 @@ function setupInteractiveHandlers() {
     "Miejsca zdarzenia nie przekazano ze względu na brak podjętych działań ratowniczych, o czym poinformowano SKKM.",
     "Miejsca zdarzenia nie przekazano ze względu na brak właściciela obiektu, o czym poinformowano SKKM.",
     "Miejsca zdarzenia nie przekazano ze względu na charakter zdarzenia i brak szkód, o czym poinformowano SKKM.",
-    "Miejsca zdarzenia nie przekazano ze względu na brak właściciela obiektu na miejscu zdarzenia, o czym poinformowano SKKM."
+    "Miejsca zdarzenia nie przekazano ze względu na brak właściciela obiektu na miejscu zdarzenia, o czym poinformowano SKKM.",
+    "Miejsca zdarzenia nie przekazano ze względu na mnogość zdarzeń, o czym poinformowano SKKM."
   ];
 
   options.forEach(opt => {
@@ -586,19 +586,33 @@ updateHydrantText(span);
   //jsonInput.addEventListener("change", handleHydrantJsonLoad);
   menu.appendChild(jsonInput);
 
-  const tempLabel = document.createElement("label");
-  const tempCheckbox = document.createElement("input");
-  tempCheckbox.type = "checkbox";
-  tempCheckbox.checked = span.dataset.niskaTemp === "true";
+const checkboxOptions = [
+  {
+    key: "niskaTemp",
+    label: "Nie sprawdzono ze względu na ujemną temperaturę"
+  },
+  {
+    key: "wieleZdarzen",
+    label: "Nie sprawdzono ze względu na mnogość zdarzeń"
+  }
+];
 
-  tempCheckbox.addEventListener("change", () => {
-    span.dataset.niskaTemp = tempCheckbox.checked ? "true" : "false";
+checkboxOptions.forEach(opt => {
+  const label = document.createElement("label");
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = span.dataset[opt.key] === "true";
+
+  checkbox.addEventListener("change", () => {
+    span.dataset[opt.key] = checkbox.checked ? "true" : "false";
     updateHydrantText(span);
   });
 
-  tempLabel.appendChild(tempCheckbox);
-  tempLabel.appendChild(document.createTextNode(" Nie sprawdzono ze względu na ujemną temperaturę"));
-  menu.appendChild(tempLabel);
+  label.appendChild(checkbox);
+  label.appendChild(document.createTextNode(" " + opt.label));
+  menu.appendChild(label);
+});
+
 }
   if (el.id === "weatherResult") {
   const formGroup = document.createElement("div");
@@ -849,24 +863,21 @@ function updateHydrantText(span) {
   const stan = span.dataset.stan || "";
   const ozn = span.dataset.ozn || "";
   const ul = span.dataset.ul || "";
-  const temp = span.dataset.niskaTemp === "true";
 
-  if (!typ && !ozn && !ul) {
+  const temp = span.dataset.niskaTemp === "true";
+  const wieleZdarzen = span.dataset.wieleZdarzen === "true";
+  if (wieleZdarzen) {
+    span.textContent = "Nie sprawdzono ze względu na mnogość zdarzeń.";
+    return;
+  }
+  if (!typ && !ozn && !ul && !stan) {
     span.textContent = "";
     return;
   }
-
- let text = typ;
-  if (!temp && stan) {
-    text += `, ${stan}`;
-  }
-  if (ozn) {
-    text += `, ${ozn}`;
-  }
-  if (ul) {
-    text += ` - ul. ${ul}`;
-  }
-
+  let text = typ;
+  if (stan) text += `, ${stan}`;
+  if (ozn) text += `, ${ozn}`;
+  if (ul) text += ` - ul. ${ul}`;
   text += temp ? " - nie sprawdzono ze względu na ujemną temperaturę." : ".";
 
   span.textContent = text;
