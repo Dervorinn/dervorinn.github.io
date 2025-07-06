@@ -1,4 +1,8 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
+  // 🔽 1. Wczytaj domyślny tab
+  loadTab("tab3");
+
+  // 🔽 2. Obsługa logo
   const logo = document.querySelector('.navbar-logo');
   const span = document.getElementById('logoText');
 
@@ -16,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 300);
     }, 300); 
   };
+
   if (logo && span) {
     logo.addEventListener('mouseenter', () => {
       animateTextChange('APP', '14px');
@@ -27,6 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error("Nie znaleziono logo lub span.");
   }
 });
+
+// 🔽 Funkcja do ładowania zakładek
 function loadTab(tabName) {
   fetch(`${tabName}.html`)
     .then(res => {
@@ -34,13 +41,18 @@ function loadTab(tabName) {
       return res.text();
     })
     .then(html => {
-      document.getElementById("tabContent").innerHTML = html;
-
-      // 🔽 Załaduj odpowiedni skrypt
-      if (tabName === "tab3") {
-        loadScript("script3.js");
+      const content = document.getElementById("tabContent");
+      if (!content) {
+        console.error("Brak elementu #tabContent w DOM");
+        return;
       }
-      // jeśli masz inne skrypty do innych zakładek, możesz je tu dopisać
+
+      content.innerHTML = html;
+
+      // 🔽 Załaduj skrypt tab3 jeśli potrzebny
+      if (tabName === "tab3") {
+        setTimeout(() => loadScript("script3.js"), 50); // krótka przerwa na wstawienie HTML
+      }
     })
     .catch(err => {
       document.getElementById("tabContent").innerHTML =
@@ -48,16 +60,13 @@ function loadTab(tabName) {
     });
 }
 
+// 🔽 Funkcja do ładowania skryptu
 function loadScript(src) {
   const existing = document.querySelector(`script[src="${src}"]`);
-  if (existing) existing.remove(); // usuń stary, jeśli istnieje
+  if (existing) existing.remove();
 
   const script = document.createElement("script");
   script.src = src;
   script.defer = true;
   document.body.appendChild(script);
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-  loadTab("tab3");
-});
