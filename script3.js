@@ -742,7 +742,7 @@ if (weatherDataAuto) {
       
 }
       else if (el.classList.contains("kanal-kom")) {
-  const kanały = ["B004","B025", "B026", "B027", "B030", "B045", "B046", "B048", "B049", "B050", "B051", "B060"];
+  const kanały = ["B004","B025", "B028", "B049", "B050", "B051", "B060",];
 
   kanały.forEach(opt => {
     const li = document.createElement("li");
@@ -815,7 +815,8 @@ function addPoziomLine(isDuplicate = false) {
     deleteBtn.className = "delete-btn";
     deleteBtn.textContent = "🗑️ Usuń";
     deleteBtn.style = "margin-left: 10px; background: #fdd; border: 1px solid #c00; color: #600; cursor: pointer; border-radius: 4px; padding: 2px 6px;";
-    
+    deleteBtn.setAttribute("aria-hidden", "true");
+    deleteBtn.setAttribute("draggable", "false");
     deleteBtn.addEventListener("click", () => {
       line.remove();
       const brToRemove = container.querySelector(`br[data-line-id="${lineId}"]`);
