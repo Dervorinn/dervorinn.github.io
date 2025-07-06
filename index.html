@@ -25,7 +25,27 @@
       v 0.5 200725
     </div>
   </div>
-  <iframe id="tabFrame" src="tab3.html" style="width: 96%; height: 100vh; border: none;" scrolling="auto"></iframe>
+  <div id="tabContent" style="padding: 16px;"></div>
   <script src="main.js"></script>
 </body>
 </html>
+<script>
+function loadTab(url) {
+  fetch(url)
+    .then(res => {
+      if (!res.ok) throw new Error("Błąd ładowania: " + res.status);
+      return res.text();
+    })
+    .then(html => {
+      document.getElementById("tabContent").innerHTML = html;
+    })
+    .catch(err => {
+      document.getElementById("tabContent").innerHTML = `<p style="color:red;">Nie udało się załadować zakładki.<br>${err.message}</p>`;
+    });
+}
+
+// Załaduj domyślną zakładkę przy starcie
+document.addEventListener("DOMContentLoaded", () => {
+  loadTab("tab3.html");
+});
+</script>
