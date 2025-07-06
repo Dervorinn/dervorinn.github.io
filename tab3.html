@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Podstawowy</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script3.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h2>33.1 Opis</h2>
+  <div id="editableBox" class="editable" contenteditable="true">
+    <span id="interactiveText1" class="interactive">źródło zgłoszenia</span>
+    <span id="defaultText" class="interactive">”wpisz opis zdarzenia...”</span>
+    <br><br>
+    <span id="interactiveText2" class="interactive">Sytuacja zastana/rozpoznanie:</span>
+    <div id="myślniki"></div>
+    <br>
+    <span>Działania straży pożarnej polegały na:</span>
+    <div id="dzialaniaContainer"></div> 
+    <br>
+    Organizacja łączności: korzystano z kanału – B025, B049.
+    <br>
+    <br>
+    <div id="poziomContainer"></div>
+    <div id="hydrantContainer"></div>
+  </div>
+  <ul id="menu" class="context-menu"></ul>
+  <button class="copy-button" onclick="kopiujZawartosc()">📋 Kopiuj 33.1</button>
+  <button class="copy-button" onclick="kopiujsluzby()">📋 Kopiuj 33.2</button>
+  
+  <h2>33.4 Pogoda</h2>
+  <div id="weatherBox" class="editable" contenteditable="true">
+    <div id="weatherResult" class="interactive">
+      Kliknij tutaj, aby edytować pogodę
+    </div>
+  </div>
+  <button class="copy-button" onclick="kopiujPogode()">📋 Kopiuj 33.4</button>
+  <h2>33.5 Przekazanie miejsca zdarzenia</h2>
+  <div id="przekazanieBox" class="editable" contenteditable="true">
+    <div id="przekazanie"class="interactive">
+      Kliknij tutaj, aby edytować przekazanie
+    </div>
+  </div>
+  <button class="copy-button" onclick="kopiujprzekazanie()">📋 Kopiuj 33.5</button>
+</div>

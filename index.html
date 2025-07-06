@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generator opisu v 0.5</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-light">
+
+  <div class="navbar">
+    <div class="navbar-logo-obwoluta">
+      <div class="navbar-logo"><span id="logoText">K</span></div>
+    </div>
+    <div class="navbar-left">
+      <div class="navbar-links">
+        <button onclick="loadTab('tab3')">Podstawowy</button>
+        <button onclick="loadTab('tab1')">Zapasowy</button>
+        <button onclick="loadTab('tab2')">7 Punktów tlenku węgla</button>
+        <button onclick="loadTab('tab4')">Przedysponowano</button>
+      </div>
+    </div>
+    <div class="navbar-right">
+      &copy; Krzysztof Kokoszczyk<br>
+      v 0.5 200725
+    </div>
+  </div>
+  <iframe id="tabFrame" src="tab3.html" style="width: 96%; height: 100vh; border: none;" scrolling="auto"></iframe>
+  <script src="main.js"></script>
+</body>
+</html>

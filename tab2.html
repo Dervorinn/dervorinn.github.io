@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>7 punktów</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    textarea.interactive {
+      border: 1px dashed #ccc;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+      background-color: #fff;
+      box-sizing: border-box;
+      resize: vertical;
+      width: 100%;
+      height: 300px;
+    }
+  </style>
+</head>
+<body onload="updateDescription()">
+
+<div class="container">
+  <div class="form-check mb-3">
+    <input type="checkbox" id="coCheckbox" class="form-check-input" onchange="updateDescription()" checked>
+    <label class="form-check-label" for="coCheckbox">Tlenek</label>
+  </div>
+
+  <div id="coDetails" class="mb-4">
+    <div class="d-flex gap-3">
+      <input type="text" id="aptNumber" placeholder="Wpisz numer mieszkania" oninput="updateDescription()">
+      <input type="text" id="checkedFlats" placeholder="Wpisz sprawdzone mieszkania" oninput="updateDescription()">
+      <input type="text" id="uncheckedFlats" placeholder="Nie dokonano pomiarów - numery" oninput="updateDescription()">
+    </div>
+    <div class="mt-3 d-flex gap-3">
+      <label><input type="checkbox" id="evacuation" onchange="updateDescription()"> Ewakuacja</label>
+      <label><input type="checkbox" id="kpp" onchange="updateDescription()"> KPP</label>
+      <label><input type="checkbox" id="drager" onchange="updateDescription()"> Drager</label>
+      <label><input type="checkbox" id="ban" onchange="updateDescription()"> Zakaz</label>
+    </div>
+  </div>
+
+  <h2>Wygenerowany opis</h2>
+  <textarea id="output" class="interactive" style="width: 100%; height: 300px; white-space: pre-wrap;" readonly></textarea>
+  <div class="mt-3">
+    <button class="copy-button" onclick="copyDescriptionOnly()">📋 Kopiuj</button>
+  </div>
+</div>
+
+<script>
+  function updateDescription() {
+    const co = document.getElementById("coCheckbox").checked;
+    let outputText = "";
+
+    if (co) {
+      const apt = document.getElementById("aptNumber").value;
+      const flats = document.getElementById("checkedFlats").value || "brak danych";
+      const unflats = document.getElementById("uncheckedFlats").value || "nie dotyczy";
+      const evac = document.getElementById("evacuation").checked;
+      const kpp = document.getElementById("kpp").checked;
+      const drager = document.getElementById("drager").checked;
+      const ban = document.getElementById("ban").checked;
+
+      outputText += `1. Ewakuacja - ${evac ? 'przeprowadzono' : 'nie przeprowadzono'}.\n`;
+      outputText += `2. KPP - lokatorzy mieszkania nr ${apt} ${kpp ? 'wymagali' : 'nie wymagali'} udzielenia KPP oraz wezwania ZRM na miejsce zdarzenia.\n`;
+      outputText += `3. Pomiary w miejscu zdarzenia - wykonano pomiary na obecność tlenku węgla w mieszkaniu nr ${apt} - I pomiar wynik 0 ppm., po przewietrzeniu mieszkania - wynik wskazywał 0 ppm.\n`;
+      outputText += `4. Użyty sprzęt - sprzęt pomiarowy ${drager ? 'Drager X-am 2500' : 'MSA Altair 4X'} oraz sprzęt ochrony dróg oddechowych.\n`;
+      outputText += `5. Pomiary w pozostałej części obiektu, sprawdzono mieszkania w tym samym pionie: mieszkania nr: ${flats} przy włączonym piecyku - wynik 0 ppm, po przewietrzeniu mieszkań - wynik 0 ppm. Nie dokonano pomiarów w mieszkaniach nr: ${unflats} - brak dostępu do mieszkań.\n`;
+      outputText += `6. Ewentualny zakaz użytkowania - ${ban ? 'wydano' : 'nie wydano. Zalecono wietrzenie mieszkania.'}\n`;
+      outputText += `7. Sposób przekazania miejsca zdarzenia - miejsce zdarzenia przekazano lokatorce mieszkania nr ${apt}.\n\n`;
+    }
+
+    document.getElementById("output").value = outputText;
+  }
+
+  function copyDescriptionOnly() {
+    const output = document.getElementById("output").value;
+    const lines = output.trim().split("\\n");
+    const tempIndex = lines.findIndex(line => line.trim().startsWith("Temp."));
+    const relevantLines = tempIndex !== -1 ? lines.slice(0, tempIndex) : lines;
+    navigator.clipboard.writeText(relevantLines.join("\\n").trim());
+  }
+</script>
+
+</body>
+</html>

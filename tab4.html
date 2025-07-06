@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Siły i środki - Przedysponowanie</title>
+  <!-- Flatpickr CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <link rel="stylesheet" href="style.css">
+  <style>
+    textarea.interactive {
+      border: 1px dashed #ccc;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+      background-color: #fff;
+      box-sizing: border-box;
+      resize: vertical;
+      width: 100%;
+      height: 300px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Siły i środki przedysponowane</h2>
+
+  <div class="form-group">
+    <label for="dispatchDatetime">Data i godzina:</label><br />
+    <input type="text" id="dispatchDatetime" placeholder="Wybierz datę i godzinę" />
+  </div>
+
+  <div class="form-group">
+    <label for="dispatchVehicle">Wybierz pojazd:</label><br />
+    <select id="dispatchVehicle">
+      <option value="GBA -Rt 2,5/25 RENAULT, SF 302-21">GBA -Rt 2,5/25 RENAULT, SF 302-21</option>
+      <option value="GCBA 5/32 MAN, SF 302-25">GCBA GCBA 5/38/4,6 SCANIA, SF 302-25</option>
+      <option value="SH 25 Volvo, SF 302-51">SD 30 IVECO, SF 302-51</option>
+      <option value="SLRr Ford Ranger, SF 302-90">SLRR FORD RANGER, SF 302-90</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="dispatchReportNumber">Numer meldunku (format x-xxxx):</label><br />
+    <div id="reportNumberContainer">
+      <span id="fixedPrefix"></span>
+      <input type="text" id="dispatchReportNumber" placeholder="x-xxxx" maxlength="6" oninput="formatReportNumber()" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="dispatchOutput">Wygenerowany tekst:</label><br />
+    <textarea id="dispatchOutput" class="interactive"></textarea>
+  </div>
+
+  <button class="copy-button" onclick="copyDispatch()">📋 Kopiuj</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    flatpickr("#dispatchDatetime", {
+      enableTime: true,
+      enableSeconds: true,
+      time_24hr: true,
+      dateFormat: "d-m-Y H:i:S",
+      defaultDate: new Date(),
+      onChange: generateDispatch
+    });
+
+    document.getElementById("dispatchVehicle").addEventListener("change", generateDispatch);
+    document.getElementById("dispatchReportNumber").addEventListener("input", generateDispatch);
+
+    function formatReportNumber() {
+      const input = document.getElementById("dispatchReportNumber");
+      let val = input.value.toUpperCase();
+
+      // Usuwamy wszystko co nie jest literą lub cyfrą
+      val = val.replace(/[^A-Z0-9]/g, "");
+
+      // Dodajemy myślnik po pierwszym znaku, jeśli jest więcej niż 1 znak
+      if (val.length > 1) {
+        val = val.slice(0,1) + "-" + val.slice(1,6);
+      }
+
+      // Limit max 6 znaków (1 znak + '-' + 4 znaki)
+      val = val.slice(0,6);
+
+      input.value = val;
+    }
+
+    function generateDispatch() {
+      const datetime = document.getElementById("dispatchDatetime").value;
+      const vehicle = document.getElementById("dispatchVehicle").value;
+      const reportNumberEnd = document.getElementById("dispatchReportNumber").value.trim();
+      const output = document.getElementById("dispatchOutput");
+
+      if (!datetime || !vehicle) {
+        output.value = "";
+        return;
+      }
+
+      const fixedPrefix = "120100";
+      const reportText = reportNumberEnd ? ` nr meldunku ${fixedPrefix}${reportNumberEnd}` : "";
+
+      output.value = `-${datetime}: ${vehicle}${reportText}`;
+    }
+
+    function copyDispatch() {
+      const output = document.getElementById("dispatchOutput");
+      navigator.clipboard.writeText(output.value).then(() => {
+        alert("Skopiowano do schowka!");
+      });
+    }
+
+    window.addEventListener("DOMContentLoaded", generateDispatch);
+  </script>
+</body>
+</html>
