@@ -426,7 +426,6 @@ if (rights.length > 0) {
 
     menu.appendChild(container);
   }
-
   } else if (el.classList.contains("hydrant-label")) {
   const span = el.nextElementSibling;
 
@@ -740,8 +739,30 @@ if (weatherDataAuto) {
         });
         menu.appendChild(input);
       }
+      
 }
-        
+      else if (el.classList.contains("kanal-kom")) {
+  const kanały = ["B004","B025", "B026", "B027", "B030", "B045", "B046", "B048", "B049", "B050", "B051", "B060"];
+
+  kanały.forEach(opt => {
+    const li = document.createElement("li");
+    li.textContent = opt;
+    li.onclick = () => {
+      el.textContent = opt;
+      menu.style.display = "none";
+    };
+    menu.appendChild(li);
+  });
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.placeholder = "Wpisz własny kanał...";
+  input.addEventListener("click", ev => ev.stopPropagation());
+  input.addEventListener("input", () => {
+    el.textContent = input.value.trim();
+  });
+  menu.appendChild(input);
+}  
        else {
         const id = el.id;
         optionsMap[id]?.forEach(opt => {
