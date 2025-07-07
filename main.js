@@ -52,7 +52,7 @@ function loadTab(tabName) {
       // 🔽 Mapowanie tabów na skrypty
       let scriptName = null;
       switch (tabName) {
-        case "tab1": scriptName = "script1.js"; break;
+        case "tab1": scriptName = "script.js"; break;
         case "tab2": scriptName = "script2.js"; break;
         case "tab3": scriptName = "script3.js"; break;
         case "tab4": scriptName = "script4.js"; break;
