@@ -49,21 +49,36 @@ function loadTab(tabName) {
 
       content.innerHTML = html;
 
-      if (tabName === "tab3") {
-        // Ładuj skrypt i po załadowaniu uruchom initializeTab3
+      // 🔽 Dobierz odpowiedni skrypt do zakładki
+      let scriptName = null;
+      switch (tabName) {
+        case "tab1":
+          scriptName = "script1.js";
+          break;
+        case "tab2":
+          scriptName = "script2.js";
+          break;
+        case "tab3":
+          scriptName = "script3.js";
+          break;
+        case "tab4":
+          scriptName = "script4.js";
+          break;
+      }
+
+      if (scriptName) {
+        // 🔽 Ładuj i uruchom funkcję inicjalizującą
         setTimeout(() => {
-          loadScript("script3.js", () => {
-            if (typeof initializeTab3 === "function") {
-              initializeTab3();
+          loadScript(scriptName, () => {
+            const fnName = `initialize${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`;
+            if (typeof window[fnName] === "function") {
+              window[fnName]();
             } else {
-              console.error("initializeTab3() nie jest zdefiniowane.");
+              console.warn(`Funkcja ${fnName}() nie istnieje.`);
             }
           });
         }, 50);
       }
-
-      // Możesz dodać inne taby podobnie, np.:
-      // if (tabName === "tab4") { ... }
     })
     .catch(err => {
       document.getElementById("tabContent").innerHTML =

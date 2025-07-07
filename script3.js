@@ -42,7 +42,7 @@ const optionsMap = {
 
 const checkboxOptions = [
   "ZRM", "Policja", "Straż Miejska", "Pogotowie gazowe",
-  "Patrol autostradowy", "Pomoc drogowa", "Właściciel", "zgłaszający", "Administracja", "brak zgłaszającego"
+  "Patrol autostradowy", "Pomoc drogowa", "właściciel", "zgłaszający", "administracja", "brak zgłaszającego"
 ];
 
 const actionOptions = [
@@ -84,9 +84,9 @@ function updateRespondersText(textSpan, selected) {
   if (textSpan.dataset.custom) {
     text = textSpan.dataset.custom;
   } else if (text === "KPP") {
-    text = "Nikt nie uskarża się na żadne dolegliwości - brak wskazań do KPP.";
+    text = "nikt nie uskarża się na żadne dolegliwości - brak wskazań do KPP.";
   } else if (text) {
-    text += selected.length === 1 ? " na miejscu" : ", na miejscu";
+    text += " na miejscu";
     if (!text.endsWith(".")) text += ".";
   }
   textSpan.textContent = text;
@@ -171,6 +171,18 @@ function renderCheckboxMenu(textSpan) {
     updateRespondersText(textSpan, ["KPP"]);
   });
   menu.appendChild(li);
+
+  const liBrakSluzb = document.createElement("li");
+liBrakSluzb.textContent = "Sytuacja zgodna z zgłoszeniem";
+liBrakSluzb.addEventListener("click", () => {
+  const customText = "Sytuacja zgodna z zgłoszeniem.";
+  textSpan.textContent = customText;
+  textSpan.dataset.selected = JSON.stringify([]);
+  textSpan.dataset.custom = customText;
+  menu.style.display = "none";
+  updateRespondersText(textSpan, []);
+});
+menu.appendChild(liBrakSluzb);
 
   const manual = document.createElement("input");
   manual.type = "text";
@@ -968,7 +980,7 @@ function kopiujZawartosc() {
   }
 
 function kopiujsluzby() {
-    const ignorowane = ["Właściciel", "Zgłaszający", "Administracja", "Brak zgłaszającego"];
+    const ignorowane = ["właściciel", "zgłaszający", "administracja", "brak zgłaszającego"];
     const sluzby = new Set();
 
     document.querySelectorAll("#myślniki .responder-text").forEach(span => {
