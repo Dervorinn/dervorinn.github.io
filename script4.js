@@ -1,56 +1,60 @@
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-flatpickr("#dispatchDatetime", {
-      enableTime: true,
-      enableSeconds: true,
-      time_24hr: true,
-      dateFormat: "d-m-Y H:i:S",
-      defaultDate: new Date(),
-      onChange: generateDispatch
-    });
+// zakładam, że flatpickr jest już załadowany globalnie
 
-    document.getElementById("dispatchVehicle").addEventListener("change", generateDispatch);
-    document.getElementById("dispatchReportNumber").addEventListener("input", generateDispatch);
+function initializeTab4() {
+  flatpickr("#dispatchDatetime", {
+    enableTime: true,
+    enableSeconds: true,
+    time_24hr: true,
+    dateFormat: "d-m-Y H:i:S",
+    defaultDate: new Date(),
+    onChange: generateDispatch
+  });
 
-    function formatReportNumber() {
-      const input = document.getElementById("dispatchReportNumber");
-      let val = input.value.toUpperCase();
+  document.getElementById("dispatchVehicle").addEventListener("change", generateDispatch);
+  document.getElementById("dispatchReportNumber").addEventListener("input", () => {
+    formatReportNumber();
+    generateDispatch();
+  });
 
-      // Usuwamy wszystko co nie jest literą lub cyfrą
-      val = val.replace(/[^A-Z0-9]/g, "");
+  // generujemy początkowo
+  generateDispatch();
+}
 
-      // Dodajemy myślnik po pierwszym znaku, jeśli jest więcej niż 1 znak
-      if (val.length > 1) {
-        val = val.slice(0,1) + "-" + val.slice(1,6);
-      }
+function formatReportNumber() {
+  const input = document.getElementById("dispatchReportNumber");
+  let val = input.value.toUpperCase();
 
-      // Limit max 6 znaków (1 znak + '-' + 4 znaki)
-      val = val.slice(0,6);
+  val = val.replace(/[^A-Z0-9]/g, "");
 
-      input.value = val;
-    }
+  if (val.length > 1) {
+    val = val.slice(0,1) + "-" + val.slice(1,6);
+  }
 
-    function generateDispatch() {
-      const datetime = document.getElementById("dispatchDatetime").value;
-      const vehicle = document.getElementById("dispatchVehicle").value;
-      const reportNumberEnd = document.getElementById("dispatchReportNumber").value.trim();
-      const output = document.getElementById("dispatchOutput");
+  val = val.slice(0,6);
 
-      if (!datetime || !vehicle) {
-        output.value = "";
-        return;
-      }
+  input.value = val;
+}
 
-      const fixedPrefix = "120100";
-      const reportText = reportNumberEnd ? ` nr meldunku ${fixedPrefix}${reportNumberEnd}` : "";
+function generateDispatch() {
+  const datetime = document.getElementById("dispatchDatetime").value;
+  const vehicle = document.getElementById("dispatchVehicle").value;
+  const reportNumberEnd = document.getElementById("dispatchReportNumber").value.trim();
+  const output = document.getElementById("dispatchOutput");
 
-      output.value = `-${datetime}: ${vehicle}${reportText}`;
-    }
+  if (!datetime || !vehicle) {
+    output.value = "";
+    return;
+  }
 
-    function copyDispatch() {
-      const output = document.getElementById("dispatchOutput");
-      navigator.clipboard.writeText(output.value).then(() => {
-        alert("Skopiowano do schowka!");
-      });
-    }
+  const fixedPrefix = "120100";
+  const reportText = reportNumberEnd ? ` nr meldunku ${fixedPrefix}${reportNumberEnd}` : "";
 
-    window.addEventListener("DOMContentLoaded", generateDispatch);
+  output.value = `-${datetime}: ${vehicle}${reportText}`;
+}
+
+function copyDispatch() {
+  const output = document.getElementById("dispatchOutput");
+  navigator.clipboard.writeText(output.value).then(() => {
+    alert("Skopiowano do schowka!");
+  });
+}
