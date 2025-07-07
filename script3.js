@@ -1,9 +1,9 @@
-let hydrantJsonData = [];
+window.hydrantJsonData = window.hydrantJsonData || [];
 function loadHydrantJsonAutomatically() {
   fetch("hydrantykato.json")
     .then(response => response.json())
     .then(data => {
-      hydrantJsonData = data;
+      window.hydrantJsonData = data;
 
       const datalist = document.getElementById("hydrant-ulice");
       if (!datalist) {
@@ -19,7 +19,7 @@ function loadHydrantJsonAutomatically() {
         datalist.appendChild(option);
       }
 
-      console.log("Hydranty załadowane:", hydrantJsonData.length);
+      console.log("Hydranty załadowane:", window.hydrantJsonData.length);
     })
     .catch(err => {
       console.error("Błąd ładowania hydrantów:", err);

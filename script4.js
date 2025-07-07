@@ -21,8 +21,13 @@ function initializeTab4() {
 function init() {
       // Ustawienie daty i godziny na teraz
       const now = new Date();
-      const local = now.toISOString().slice(0, 16); // "yyyy-MM-ddTHH:mm"
-      document.getElementById("dispatchTime").value = local;
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const local = `${year}-${month}-${day}T${hours}:${minutes}`;
+document.getElementById("dispatchTime").value = local;
 
       // Listener-y
       document.getElementById("dispatchTime").addEventListener("input", generateDispatchText);
