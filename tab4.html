@@ -3,10 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <title>Siły i środki - Przedysponowanie</title>
-  <!-- Flatpickr CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
-  <link rel="stylesheet" href="style.css">
-  <script src="script4.js"></script>
   <style>
     textarea.interactive {
       border: 1px dashed #ccc;
@@ -17,42 +13,69 @@
       box-sizing: border-box;
       resize: vertical;
       width: 100%;
-      height: 300px;
+      height: 200px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    #reportNumberContainer {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    #fixedPrefix {
+      font-weight: bold;
+      background: #eee;
+      padding: 6px 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      user-select: none;
+    }
+    input, select {
+      padding: 6px;
+      font-size: 1rem;
     }
   </style>
 </head>
-<body>
+<body onload="init()">
 
   <h2>Siły i środki przedysponowane</h2>
 
   <div class="form-group">
-    <label for="dispatchDatetime">Data i godzina:</label><br />
-    <input type="text" id="dispatchDatetime" placeholder="Wybierz datę i godzinę" />
+    <label for="dispatchTime">Data i godzina:</label><br />
+    <input type="datetime-local" id="dispatchTime" />
+    <select id="secondsSelect">
+      <!-- JS wygeneruje sekundy -->
+    </select> sekund
   </div>
 
   <div class="form-group">
     <label for="dispatchVehicle">Wybierz pojazd:</label><br />
     <select id="dispatchVehicle">
       <option value="GBA -Rt 2,5/25 RENAULT, SF 302-21">GBA -Rt 2,5/25 RENAULT, SF 302-21</option>
-      <option value="GCBA 5/32 MAN, SF 302-25">GCBA GCBA 5/38/4,6 SCANIA, SF 302-25</option>
-      <option value="SH 25 Volvo, SF 302-51">SD 30 IVECO, SF 302-51</option>
-      <option value="SLRr Ford Ranger, SF 302-90">SLRR FORD RANGER, SF 302-90</option>
+      <option value="GCBA 5/38/4,6 SCANIA, SF 302-25">GCBA 5/38/4,6 SCANIA, SF 302-25</option>
+      <option value="SD 30 IVECO, SF 302-51">SD 30 IVECO, SF 302-51</option>
+      <option value="SLRR FORD RANGER, SF 302-90">SLRR FORD RANGER, SF 302-90</option>
     </select>
   </div>
 
   <div class="form-group">
     <label for="dispatchReportNumber">Numer meldunku (format x-xxxx):</label><br />
     <div id="reportNumberContainer">
-      <span id="fixedPrefix"></span>
-      <input type="text" id="dispatchReportNumber" placeholder="x-xxxx" maxlength="6" oninput="formatReportNumber()" />
+      <span id="fixedPrefix">120100</span>
+      <input
+        type="text"
+        id="dispatchReportNumber"
+        placeholder="x-xxxx"
+        maxlength="6"
+        oninput="formatReportNumber(); generateDispatchText();"
+      />
     </div>
   </div>
 
   <div class="form-group">
     <label for="dispatchOutput">Wygenerowany tekst:</label><br />
-    <textarea id="dispatchOutput" class="interactive"></textarea>
+    <textarea id="dispatchOutput" class="interactive" readonly></textarea>
   </div>
 
-  <button class="copy-button" onclick="copyDispatch()">📋 Kopiuj</button>
-</body>
-</html>
+  <button onclick="copyDispatch()">📋 Kopiuj</button>
