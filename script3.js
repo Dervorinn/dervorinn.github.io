@@ -26,7 +26,7 @@ function loadHydrantJsonAutomatically() {
     });
 }
 
-const optionsMap = {
+window.optionsMap = window.optionsMap || {
   interactiveText1: [
     "SKKM PSP w Katowicach przyjęło zgłoszenie na numer miejski",
     "SKKM PSP w Katowicach przyjęło formatkę monitoringu o treści",
@@ -1088,12 +1088,12 @@ function degToDirection(deg) {
     const dirs = ["północny", "północno-wschodni", "wschodni", "południowo-wschodni", "południowy", "południowo-zachodni", "zachodni", "północno-zachodni"];
     return dirs[Math.round(deg / 45) % 8];
   }
-  function initializeTab3() {
-    addResponderLine();
-    addActionLine();
-    setupInteractiveHandlers();
-    addPoziomLine(false);
-    addHydrantLine();
-    loadHydrantJsonAutomatically();
-    fetchWeatherFromIMGW();
-  }
+    function initializeTab3() {
+      addResponderLine();
+      addActionLine();
+      setupInteractiveHandlers();
+      addPoziomLine(false);
+      addHydrantLine();
+      loadHydrantJsonAutomatically();
+      fetchWeatherFromIMGW();
+    }
