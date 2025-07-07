@@ -1,42 +1,3 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-  <meta charset="UTF-8" />
-  <title>Siły i środki - Przedysponowanie</title>
-  <style>
-    textarea.interactive {
-      border: 1px dashed #ccc;
-      padding: 8px;
-      font-family: inherit;
-      font-size: 1rem;
-      background-color: #fff;
-      box-sizing: border-box;
-      resize: vertical;
-      width: 100%;
-      height: 200px;
-    }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    #reportNumberContainer {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    #fixedPrefix {
-      font-weight: bold;
-      background: #eee;
-      padding: 6px 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      user-select: none;
-    }
-    input, select {
-      padding: 6px;
-      font-size: 1rem;
-    }
-  </style>
-</head>
 <body onload="init()">
 
   <h2>Siły i środki przedysponowane</h2>
@@ -44,9 +5,6 @@
   <div class="form-group">
     <label for="dispatchTime">Data i godzina:</label><br />
     <input type="datetime-local" id="dispatchTime" />
-    <select id="secondsSelect">
-      <!-- JS wygeneruje sekundy -->
-    </select> sekund
   </div>
 
   <div class="form-group">
@@ -60,17 +18,9 @@
   </div>
 
   <div class="form-group">
-    <label for="dispatchReportNumber">Numer meldunku (format x-xxxx):</label><br />
-    <div id="reportNumberContainer">
-      <span id="fixedPrefix">120100</span>
-      <input
-        type="text"
-        id="dispatchReportNumber"
-        placeholder="x-xxxx"
-        maxlength="6"
-        oninput="formatReportNumber(); generateDispatchText();"
-      />
-    </div>
+    <label for="meldunekPrefix">Numer meldunku (prefix):</label><br />
+    <input type="text" id="meldunekPrefix" value="120100" maxlength="10" />
+    <input type="text" id="meldunekSuffix" placeholder="x-xxxx" maxlength="6" oninput="formatReportSuffix()" />
   </div>
 
   <div class="form-group">

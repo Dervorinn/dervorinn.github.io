@@ -1,34 +1,34 @@
 function init() {
-      const secondsSelect = document.getElementById("secondsSelect");
-      for (let i = 0; i < 60; i++) {
-        const val = i.toString().padStart(2, '0');
-        const opt = document.createElement("option");
-        opt.value = val;
-        opt.textContent = val;
-        secondsSelect.appendChild(opt);
-      }
+      // Ustawienie daty i godziny na teraz
+      const now = new Date();
+      const local = now.toISOString().slice(0, 16); // "yyyy-MM-ddTHH:mm"
+      document.getElementById("dispatchTime").value = local;
 
+      // Listener-y
       document.getElementById("dispatchTime").addEventListener("input", generateDispatchText);
-      document.getElementById("secondsSelect").addEventListener("change", generateDispatchText);
       document.getElementById("dispatchVehicle").addEventListener("change", generateDispatchText);
+      document.getElementById("meldunekPrefix").addEventListener("input", generateDispatchText);
+      document.getElementById("meldunekSuffix").addEventListener("input", generateDispatchText);
+
       generateDispatchText(); // inicjalne wygenerowanie
     }
 
-    function formatReportNumber() {
-      const input = document.getElementById("dispatchReportNumber");
+    function formatReportSuffix() {
+      const input = document.getElementById("meldunekSuffix");
       let val = input.value.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
 
       if (val.length > 1) {
         val = val.slice(0,1) + "-" + val.slice(1,5);
       }
+
       input.value = val.slice(0,6);
     }
 
     function generateDispatchText() {
       const timeInput = document.getElementById("dispatchTime").value;
       const vehicle = document.getElementById("dispatchVehicle").value;
-      const seconds = document.getElementById("secondsSelect").value;
-      const reportNumberEnd = document.getElementById("dispatchReportNumber").value.trim();
+      const reportPrefix = document.getElementById("meldunekPrefix").value.trim();
+      const reportSuffix = document.getElementById("meldunekSuffix").value.trim();
       const output = document.getElementById("dispatchOutput");
 
       if (!timeInput || !vehicle) {
@@ -42,11 +42,9 @@ function init() {
         ("0" + (dateObj.getMonth() + 1)).slice(-2) + "-" +
         dateObj.getFullYear() + " " +
         ("0" + dateObj.getHours()).slice(-2) + ":" +
-        ("0" + dateObj.getMinutes()).slice(-2) + ":" +
-        seconds;
+        ("0" + dateObj.getMinutes()).slice(-2);
 
-      const fixedPrefix = "120100";
-      const reportText = reportNumberEnd ? ` nr meldunku ${fixedPrefix}${reportNumberEnd}.` : "";
+      const reportText = reportSuffix ? ` nr meldunku ${reportPrefix}${reportSuffix}.` : "";
 
       output.value = `-${formatted}: ${vehicle}${reportText}`;
     }
