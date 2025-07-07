@@ -63,7 +63,7 @@ function generateDispatchText() {
 
   const reportText = reportSuffix ? ` nr meldunku ${reportPrefix}${reportSuffix}.` : "";
 
-  output.value = `-${formatted}: ${vehicle}${reportText}`;
+output.value = `Siły i środki przedysponowane do innych zdarzeń:\n-${formatted}: ${vehicle}${reportText}`;
 }
 
 function copyDispatch() {
