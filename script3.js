@@ -816,7 +816,7 @@ if (pressureVal) {
 
 }
 
-const stopnieOptions = [
+window.stopnieOptions = [
   "dh.", "ogn.", "st. ogn.", "mł. asp.",
   "asp.", "st. asp.", "asp. sztab.", "mł. kpt.", "kpt.", "st. kpt.", "mł. bryg.",
 ];
