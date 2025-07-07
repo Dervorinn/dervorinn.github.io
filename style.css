@@ -420,3 +420,16 @@ h1 {
   padding: 100px 16px 16px;
   box-sizing: border-box;
 }
+
+#defaultText, #interactiveText1 {
+  display: block;
+  white-space: pre-wrap !important;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  padding: 2px 6px;
+  min-height: 40px;
+  background: #fff;
+  border: 1px dashed #888;
+  border-radius: 4px;
+}
