@@ -76,34 +76,6 @@ function loadTab(tabName) {
       document.getElementById("tabContent").innerHTML =
         `<p style="color:red;">Nie udało się załadować zakładki.<br>${err.message}</p>`;
     });
-    if (scriptName) {
-  setTimeout(() => {
-    if (tabName === "tab4") {
-      // Najpierw ładujemy flatpickr
-      loadScript("https://cdn.jsdelivr.net/npm/flatpickr", () => {
-        // Potem ładujemy script4.js
-        loadScript(scriptName, () => {
-          const fnName = `initialize${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`;
-          if (typeof window[fnName] === "function") {
-            window[fnName]();
-          } else {
-            console.warn(`Funkcja ${fnName}() nie istnieje.`);
-          }
-        });
-      });
-    } else {
-      // Dla innych zakładek normalne ładowanie skryptów
-      loadScript(scriptName, () => {
-        const fnName = `initialize${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`;
-        if (typeof window[fnName] === "function") {
-          window[fnName]();
-        } else {
-          console.warn(`Funkcja ${fnName}() nie istnieje.`);
-        }
-      });
-    }
-  }, 50);
-}
 }
 
 function loadScript(src, callback) {

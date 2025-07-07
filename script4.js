@@ -15,8 +15,6 @@ function initializeTab4() {
     formatReportNumber();
     generateDispatch();
   });
-
-  // generujemy początkowo
   generateDispatch();
 }
 
@@ -36,15 +34,27 @@ function formatReportNumber() {
 }
 
 function generateDispatch() {
-  const datetime = document.getElementById("dispatchDatetime").value;
+  const datetimeInput = document.getElementById("dispatchDatetime");
   const vehicle = document.getElementById("dispatchVehicle").value;
   const reportNumberEnd = document.getElementById("dispatchReportNumber").value.trim();
   const output = document.getElementById("dispatchOutput");
 
-  if (!datetime || !vehicle) {
+  if (!datetimeInput.value || !vehicle) {
     output.value = "";
     return;
   }
+
+  const rawDate = datetimeInput.value; 
+  const dateObj = new Date(rawDate);
+
+  const pad = (n) => (n < 10 ? "0" + n : n);
+
+  const formattedDate = 
+    pad(dateObj.getDate()) + "-" +
+    pad(dateObj.getMonth() + 1) + "-" +
+    dateObj.getFullYear() + " " +
+    pad(dateObj.getHours()) + ":" +
+    pad(dateObj.getMinutes());
 
   const fixedPrefix = "120100";
   const reportText = reportNumberEnd ? ` nr meldunku ${fixedPrefix}${reportNumberEnd}.` : "";
