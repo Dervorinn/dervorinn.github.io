@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         span.classList.remove('fade-in');
       }, 300);
-    }, 300); 
+    }, 300);
   };
 
   if (logo && span) {
@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+// 🔽 Funkcja do ładowania zakładek
 function loadTab(tabName) {
   fetch(`${tabName}.html`)
     .then(res => {
@@ -48,6 +49,7 @@ function loadTab(tabName) {
 
       content.innerHTML = html;
 
+      // 🔽 Mapowanie tabów na skrypty
       let scriptName = null;
       switch (tabName) {
         case "tab1": scriptName = "script1.js"; break;
@@ -57,12 +59,10 @@ function loadTab(tabName) {
       }
 
       if (scriptName) {
-        // Usuń poprzedni skrypt, jeśli jest
-        const oldScript = document.querySelector(`script[src="${scriptName}"]`);
-        if (oldScript) oldScript.remove();
+        // Wymuś unikalne ładowanie (cache busting)
+        const uniqueSrc = `${scriptName}?t=${Date.now()}`;
 
-        // Załaduj skrypt i wywołaj init po załadowaniu
-        loadScript(scriptName, () => {
+        loadScript(uniqueSrc, () => {
           const fnName = `initialize${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`;
           if (typeof window[fnName] === "function") {
             window[fnName]();
@@ -78,6 +78,7 @@ function loadTab(tabName) {
     });
 }
 
+// 🔽 Funkcja do ładowania skryptu JS z callbackiem
 function loadScript(src, callback) {
   const script = document.createElement("script");
   script.src = src;

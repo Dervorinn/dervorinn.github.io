@@ -1,3 +1,23 @@
+function initializeTab4() {
+  const now = new Date();
+  const local = now.toISOString().slice(0, 16); // YYYY-MM-DDTHH:mm
+  const dispatchTimeInput = document.getElementById("dispatchTime");
+
+  if (dispatchTimeInput) {
+    dispatchTimeInput.value = local;
+  }
+
+  // Nasłuchiwacze
+  document.getElementById("dispatchTime")?.addEventListener("input", generateDispatchText);
+  document.getElementById("dispatchVehicle")?.addEventListener("change", generateDispatchText);
+  document.getElementById("meldunekPrefix")?.addEventListener("input", generateDispatchText);
+  document.getElementById("meldunekSuffix")?.addEventListener("input", () => {
+    formatReportSuffix();
+    generateDispatchText();
+  });
+  generateDispatchText();
+}
+
 function init() {
       // Ustawienie daty i godziny na teraz
       const now = new Date();
@@ -49,7 +69,7 @@ function init() {
       output.value = `-${formatted}: ${vehicle}${reportText}`;
     }
 
-    function copyDispatch() {
+function copyDispatch() {
       const output = document.getElementById("dispatchOutput");
       navigator.clipboard.writeText(output.value).then(() => {
         alert("Skopiowano do schowka!");
