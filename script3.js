@@ -788,6 +788,31 @@ if (pressureVal) {
         });
         menu.appendChild(input);
       }
+      else if (el.classList.contains("additional-label")) {
+  const span = el.nextElementSibling;
+  menu.innerHTML = "";
+
+  window.additionalOptions.forEach(opt => {
+    const li = document.createElement("li");
+    li.textContent = opt;
+    li.onclick = () => {
+      span.textContent = opt;
+      menu.style.display = "none";
+    };
+    menu.appendChild(li);
+  });
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.placeholder = "Wpisz własną treść...";
+  input.addEventListener("click", e => e.stopPropagation());
+  input.addEventListener("input", () => {
+    span.textContent = input.value.trim();
+  });
+  menu.appendChild(input);
+}
+
+
       else {
         const id = el.id;
         optionsMap[id]?.forEach(opt => {
@@ -981,16 +1006,26 @@ function renderRightsLines(container, options) {
   }
 
 function kopiujZawartosc() {
-    const box = document.getElementById("editableBox");
-    const clone = box.cloneNode(true);
-    clone.querySelectorAll(".delete-btn").forEach(btn => btn.remove());
-    const temp = document.createElement("textarea");
-    temp.value = clone.innerText.trim();
-    document.body.appendChild(temp);
-    temp.select();
-    document.execCommand("copy");
-    document.body.removeChild(temp);
+  const box = document.getElementById("editableBox");
+  const selection = window.getSelection();
+  const range = document.createRange();
+
+  selection.removeAllRanges(); // Wyczyść istniejące zaznaczenie
+  range.selectNodeContents(box); // Zaznacz całą zawartość #editableBox
+  selection.addRange(range);
+
+  try {
+    const successful = document.execCommand("copy");
+    if (!successful) {
+      console.warn("Kopiowanie nie powiodło się");
+    }
+  } catch (err) {
+    console.error("Błąd kopiowania:", err);
   }
+
+  selection.removeAllRanges(); // Wyczyść zaznaczenie po skopiowaniu
+}
+
 
 function kopiujsluzby() {
     const ignorowane = ["właściciel", "zgłaszający", "administracja", "brak zgłaszającego"];
@@ -1084,6 +1119,75 @@ function fetchWeatherFromIMGW() {
       });
   }
 
+function addAdditionalLine(isDuplicate = false) {
+  const container = document.getElementById("additionalContainer");
+  const lineId = "additional-" + Date.now();
+
+  const line = document.createElement("div");
+  line.className = "responder-line";
+  line.dataset.lineId = lineId;
+
+  line.innerHTML = `
+  <span 
+    class="interactive additional-label" 
+    contenteditable="false" 
+    draggable="false" 
+    unselectable="on" 
+    style="user-select: none; -webkit-user-select: none;"
+  >
+    ➕ Dodatkowe zdania
+  </span>
+  <div class="additional-text"></div>
+  <button 
+    class="delete-btn" 
+    onclick="this.parentElement.remove()" 
+    contenteditable="false" 
+    draggable="false" 
+    unselectable="on" 
+    style="user-select: none; -webkit-user-select: none;"
+  >
+    🗑️
+  </button>
+<label 
+  style="margin-left:10px;" 
+  contenteditable="false" 
+  draggable="false" 
+  aria-hidden="true" 
+  tabindex="-1"
+>
+  <input 
+    type="checkbox" 
+    onclick="this.checked=false; addAdditionalLine(true)" 
+    contenteditable="false" 
+    draggable="false" 
+    tabindex="-1"
+  >
+  <span 
+    style="user-select: none; -webkit-user-select: none;" 
+    aria-hidden="true"
+  >Powiel</span>
+</label>
+`;
+
+  container.appendChild(line);
+  setupInteractiveHandlers(); // twoja istniejąca funkcja
+}
+
+window.additionalOptions = [
+  "Dokumentacji fotograficznej z miejsca zdarzenia nie sporządzono ze względu na fakt, iż usunięty konar nie przekraczał 30% korony drzewa.",
+  "Wykonano dokumentację fotograficzną.",
+  "Przybyły na miejsce ZRM po przebadaniu osoby poszkodowanej podjął decyzję o konieczności przetransportowania osoby do szpitala xxxxxxx celem dalszej diagnostyki.",
+  "Wydłużony czas dojazdu spowodowany był nieprecyzyjnym zgłoszeniem.",
+  "Lokalizacja medycznych działań ratowniczych: xx.xx.xxxx r. godz. xx:xx.",
+];
+
+// Dodaj pierwszy wiersz automatycznie po załadowaniu:
+window.addEventListener("DOMContentLoaded", () => {
+  addAdditionalLine(false);
+});
+
+
+  
 function degToDirection(deg) {
     const dirs = ["północny", "północno-wschodni", "wschodni", "południowo-wschodni", "południowy", "południowo-zachodni", "zachodni", "północno-zachodni"];
     return dirs[Math.round(deg / 45) % 8];
@@ -1096,4 +1200,5 @@ function degToDirection(deg) {
       addHydrantLine();
       loadHydrantJsonAutomatically();
       fetchWeatherFromIMGW();
+      addAdditionalLine(false);
     }
