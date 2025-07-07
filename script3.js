@@ -1040,7 +1040,7 @@ function kopiujprzekazanie() {
     document.body.removeChild(temp);
   }
 
-  let weatherDataAuto = null;
+  window.weatherDataAuto = null;
 
 function fetchWeatherFromIMGW() {
     const url = "https://danepubliczne.imgw.pl/api/data/synop/station/katowice";
