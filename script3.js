@@ -40,12 +40,12 @@ window.optionsMap = window.optionsMap || {
   ]
 };
 
-const checkboxOptions = [
+window.checkboxOptions = window.checkboxOptions || [
   "ZRM", "Policja", "Straż Miejska", "Pogotowie gazowe",
   "Patrol autostradowy", "Pomoc drogowa", "właściciel", "zgłaszający", "administracja", "brak zgłaszającego"
 ];
 
-const actionOptions = [
+window.actionOptions = window.actionOptions || [
   "zabezpieczeniu miejsca zdarzenia",
   "podaniu jednego prądu wody w natarciu",
   "sprawdzeniu pogorzeliska przy użyciu kamery termowizyjnej Flir - brak wzrostu temperatury względem otoczenia",
