@@ -285,10 +285,6 @@ h1 {
   min-height: 100px;
   width: 100%;
   box-sizing: border-box;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  white-space: pre-wrap;
-  overflow-y: auto;
 }
 
 #weatherBox, #editableBox, #przekazanieBox {

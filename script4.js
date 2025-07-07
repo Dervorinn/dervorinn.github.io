@@ -47,7 +47,7 @@ function generateDispatch() {
   }
 
   const fixedPrefix = "120100";
-  const reportText = reportNumberEnd ? ` nr meldunku ${fixedPrefix}${reportNumberEnd}` : "";
+  const reportText = reportNumberEnd ? ` nr meldunku ${fixedPrefix}${reportNumberEnd}.` : "";
 
   output.value = `-${datetime}: ${vehicle}${reportText}`;
 }
