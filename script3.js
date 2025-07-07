@@ -175,7 +175,7 @@ function renderCheckboxMenu(textSpan) {
   const liBrakSluzb = document.createElement("li");
 liBrakSluzb.textContent = "Sytuacja zgodna z zgłoszeniem";
 liBrakSluzb.addEventListener("click", () => {
-  const customText = "Sytuacja zgodna z zgłoszeniem.";
+  const customText = "sytuacja zgodna z zgłoszeniem.";
   textSpan.textContent = customText;
   textSpan.dataset.selected = JSON.stringify([]);
   textSpan.dataset.custom = customText;

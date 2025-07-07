@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// 🔽 Funkcja do ładowania zakładek
 function loadTab(tabName) {
   fetch(`${tabName}.html`)
     .then(res => {
@@ -49,35 +48,28 @@ function loadTab(tabName) {
 
       content.innerHTML = html;
 
-      // 🔽 Dobierz odpowiedni skrypt do zakładki
       let scriptName = null;
       switch (tabName) {
-        case "tab1":
-          scriptName = "script1.js";
-          break;
-        case "tab2":
-          scriptName = "script2.js";
-          break;
-        case "tab3":
-          scriptName = "script3.js";
-          break;
-        case "tab4":
-          scriptName = "script4.js";
-          break;
+        case "tab1": scriptName = "script1.js"; break;
+        case "tab2": scriptName = "script2.js"; break;
+        case "tab3": scriptName = "script3.js"; break;
+        case "tab4": scriptName = "script4.js"; break;
       }
 
       if (scriptName) {
-        // 🔽 Ładuj i uruchom funkcję inicjalizującą
-        setTimeout(() => {
-          loadScript(scriptName, () => {
-            const fnName = `initialize${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`;
-            if (typeof window[fnName] === "function") {
-              window[fnName]();
-            } else {
-              console.warn(`Funkcja ${fnName}() nie istnieje.`);
-            }
-          });
-        }, 50);
+        // Usuń poprzedni skrypt, jeśli jest
+        const oldScript = document.querySelector(`script[src="${scriptName}"]`);
+        if (oldScript) oldScript.remove();
+
+        // Załaduj skrypt i wywołaj init po załadowaniu
+        loadScript(scriptName, () => {
+          const fnName = `initialize${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`;
+          if (typeof window[fnName] === "function") {
+            window[fnName]();
+          } else {
+            console.warn(`Funkcja ${fnName}() nie istnieje.`);
+          }
+        });
       }
     })
     .catch(err => {
@@ -86,11 +78,7 @@ function loadTab(tabName) {
     });
 }
 
-// 🔽 Funkcja do ładowania skryptu JS z callbackiem
 function loadScript(src, callback) {
-  const existing = document.querySelector(`script[src="${src}"]`);
-  if (existing) existing.remove();
-
   const script = document.createElement("script");
   script.src = src;
   script.defer = true;
