@@ -173,9 +173,9 @@ function renderCheckboxMenu(textSpan) {
   menu.appendChild(li);
 
   const liBrakSluzb = document.createElement("li");
-liBrakSluzb.textContent = "Sytuacja zgodna z zgłoszeniem";
+liBrakSluzb.textContent = "Sytuacja zgodna ze zgłoszeniem";
 liBrakSluzb.addEventListener("click", () => {
-  const customText = "sytuacja zgodna z zgłoszeniem.";
+  const customText = "sytuacja zgodna ze zgłoszeniem.";
   textSpan.textContent = customText;
   textSpan.dataset.selected = JSON.stringify([]);
   textSpan.dataset.custom = customText;
@@ -729,8 +729,6 @@ function setupInteractiveHandlers() {
           console.warn(`Element #${id} nie istnieje w DOM`);
         }
       });
-
-// Obsługa ciśnienia osobno
 const pressureToggle = document.getElementById("pressureToggle");
 if (pressureToggle) {
   pressureToggle.addEventListener("change", updateLive);
@@ -789,8 +787,8 @@ if (pressureVal) {
         menu.appendChild(input);
       }
       else if (el.classList.contains("additional-label")) {
-  const span = el.nextElementSibling;
-  menu.innerHTML = "";
+      const span = el.nextElementSibling;
+      menu.innerHTML = "";
 
   window.additionalOptions.forEach(opt => {
     const li = document.createElement("li");
@@ -798,6 +796,10 @@ if (pressureVal) {
     li.onclick = () => {
       span.textContent = opt;
       menu.style.display = "none";
+
+      if (opt.includes("Lokalizacja medycznych działań ratowniczych")) {
+        alert("Pamiętaj o wpisaniu nadzorującego MCM!");
+      }
     };
     menu.appendChild(li);
   });
@@ -811,6 +813,7 @@ if (pressureVal) {
   });
   menu.appendChild(input);
 }
+
 
 
       else {
@@ -1181,7 +1184,6 @@ window.additionalOptions = [
   "Lokalizacja medycznych działań ratowniczych: xx.xx.xxxx r. godz. xx:xx.",
 ];
 
-// Dodaj pierwszy wiersz automatycznie po załadowaniu:
 window.addEventListener("DOMContentLoaded", () => {
   addAdditionalLine(false);
 });
