@@ -64,11 +64,15 @@ function loadTab(tabName) {
 
         loadScript(uniqueSrc, () => {
           const fnName = `initialize${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`;
-          if (typeof window[fnName] === "function") {
-            window[fnName]();
-          } else {
-            console.warn(`Funkcja ${fnName}() nie istnieje.`);
-          }
+
+          // 🔁 Krótkie opóźnienie, by funkcja zdążyła się pojawić
+          setTimeout(() => {
+            if (typeof window[fnName] === "function") {
+              window[fnName]();
+            } else {
+              console.warn(`Funkcja ${fnName}() nie istnieje nawet po opóźnieniu.`);
+            }
+          }, 50);
         });
       }
     })
