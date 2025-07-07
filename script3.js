@@ -720,13 +720,26 @@ function setupInteractiveHandlers() {
           fireEvent(pToggle, "change");
         }
 
-        ["temperatureInput", "weatherConditionSelect", "windSpeedInput", "windDirSelect"]
-          .forEach(id => {
-            document.getElementById(id).addEventListener("input", updateLive);
-            document.getElementById(id).addEventListener("change", updateLive);
-            document.getElementById("pressureToggle").addEventListener("change", updateLive);
-            document.getElementById("pressureVal").addEventListener("input", updateLive);
-          });
+        ["temperatureInput", "weatherConditionSelect", "windSpeedInput", "windDirSelect"].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) {
+          el.addEventListener("input", updateLive);
+          el.addEventListener("change", updateLive);
+        } else {
+          console.warn(`Element #${id} nie istnieje w DOM`);
+        }
+      });
+
+// Obsługa ciśnienia osobno
+const pressureToggle = document.getElementById("pressureToggle");
+if (pressureToggle) {
+  pressureToggle.addEventListener("change", updateLive);
+}
+
+const pressureVal = document.getElementById("pressureVal");
+if (pressureVal) {
+  pressureVal.addEventListener("input", updateLive);
+}
 
         e.stopPropagation();
         return;
