@@ -52,8 +52,8 @@ window.actionOptions = window.actionOptions || [
   "złożeniu pociętego drewna na terenie zielonym w miejscu bezpiecznym. "
 ];
 
-const menu = document.getElementById("menu");
-const myślniki = document.getElementById("myślniki");
+window.menu = document.getElementById("menu");
+window.myślniki = document.getElementById("myślniki");
 
 function addResponderLine() {
   const line = document.createElement("div");
