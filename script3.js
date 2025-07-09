@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 window.hydrantJsonData = window.hydrantJsonData || [];
 window.pressureToggleState = false;
 function loadHydrantJsonAutomatically() {
@@ -127,9 +128,6 @@ function updateRespondersText(textSpan, selected) {
     if (!text.endsWith(".")) text += ".";
   }
   textSpan.textContent = text;
-
-  const allLines = [...window.window.myślniki.querySelectorAll(".responder-line")];
-  const lastLine = allLines[allLines.length - 1];
   updateAllResponderPunctuation();
 }
 
@@ -148,9 +146,6 @@ function updateActionText(textSpan, text) {
     text = text.endsWith(".") ? text : text + ".";
     textSpan.textContent = text;
     textSpan.dataset.custom = text;
-
-    const allLines = [...document.querySelectorAll("#dzialaniaContainer .responder-line")];
-    const lastLine = allLines[allLines.length - 1];
     updateAllActionPunctuation();
   }
 }
@@ -985,26 +980,6 @@ document.addEventListener("click", (e) => {
     window.menu.style.display = "none";
   }
 });
-function renderRightsLines(container, options) {
-  const rights = [];
-  container.querySelectorAll("input[type='checkbox']").forEach(cb => {
-    if (cb.checked) rights.push(cb.dataset.text);
-  });
-
-  const existing = container.querySelector(".rights-lines");
-  if (existing) existing.remove();
-
-  if (rights.length) {
-    const div = document.createElement("div");
-    div.className = "rights-lines";
-    rights.forEach((right, i) => {
-      const line = document.createElement("div");
-      line.textContent = `- ${right}${i === rights.length - 1 ? "." : ","}`;
-      div.appendChild(line);
-    });
-    container.appendChild(div);
-  }
-}
 
 function kopiujZawartosc() {
   const box = document.getElementById("editableBox");
@@ -1204,6 +1179,11 @@ function toggleCOForm() {
   label.classList.toggle("active", isChecked);
 
   if (isChecked) {
+    // ⬇️ Uruchamiamy dopiero gdy formularz jest widoczny
+    ["aptNumber", "checkedFlats", "uncheckedFlats"].forEach(id => {
+      enhanceCommaInput(id);
+    });
+
     const weatherResult = document.getElementById("weatherResult");
     if (weatherResult) {
       weatherResult.click();
@@ -1257,7 +1237,7 @@ function updateCODescription() {
   const text =
     `\n1. Ewakuacja - ${evac ? "przeprowadzono" : "nie przeprowadzono"}.
     2. KPP - lokatorzy mieszkania nr ${apt} ${kpp ? "wymagali" : "nie wymagali"} udzielenia KPP oraz wezwania ZRM na miejsce zdarzenia.
-    3. Pomiary w miejscu zdarzenia - wykonano pomiary na obecność tlenku węgla w mieszkaniu nr ${apt} - I pomiar wynik 0 ppm., po przewietrzeniu mieszkania - wynik wskazywał 0 ppm.
+    3. Pomiary w miejscu zdarzenia - wykonano pomiary na obecność tlenku węgla w mieszkaniu nr ${apt} - I pomiar wynik 0 ppm, po przewietrzeniu mieszkania - wynik wskazywał 0 ppm.
     4. Użyty sprzęt - sprzęt pomiarowy ${selectedDeviceName} oraz sprzęt ochrony dróg oddechowych.
     5. Pomiary w pozostałej części obiektu, sprawdzono mieszkania w tym samym pionie: mieszkania nr: ${flats} przy włączonym piecyku - wynik 0 ppm, po przewietrzeniu mieszkań - wynik 0 ppm. Nie dokonano pomiarów w mieszkaniach nr: ${unflats} - brak dostępu do mieszkań.
     6. Ewentualny zakaz użytkowania - ${ban ? "wydano" : "nie wydano. Zalecono wietrzenie mieszkania."}
@@ -1274,6 +1254,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const eventType = (el.type === "checkbox" || el.tagName === "SELECT") ? "change" : "input";
     el.addEventListener(eventType, updateCODescription);
   });
+  ["aptNumber", "checkedFlats", "uncheckedFlats"].forEach(enhanceCommaInput);
 });
 
 function getLocalDatetimeString() {
@@ -1423,6 +1404,47 @@ function createDeviceSelect() {
   container.appendChild(label);
   container.appendChild(select);
 }
+
+function enhanceCommaInput(id) {
+  const input = document.getElementById(id);
+  if (!input) return;
+
+  input.addEventListener("keydown", function(e) {
+    if (e.key === " ") {
+      e.preventDefault();
+
+      const start = input.selectionStart;
+      const end = input.selectionEnd;
+      const value = input.value;
+
+      const before = value.slice(0, start);
+      const after = value.slice(end);
+      const trimmedBefore = before.trimEnd();
+      const lastChar = trimmedBefore.slice(-1);
+
+      let insert = "";
+
+      if (lastChar && lastChar !== ",") {
+        insert = ", ";
+      } else if (lastChar === ",") {
+        insert = " ";
+      }
+
+      input.value = trimmedBefore + insert + after;
+      const newPos = trimmedBefore.length + insert.length;
+      input.setSelectionRange(newPos, newPos);
+
+      updateCODescription();
+    }
+  });
+}
+
+window.addEventListener("load", () => {
+  ["aptNumber", "checkedFlats", "uncheckedFlats"].forEach(id => {
+    console.log("🔧 enhanceCommaInput init for", id); // ← Sprawdź, czy to się pojawi
+    enhanceCommaInput(id);
+  });
+});
 
 function initializeTab3() {
   addResponderLine();
