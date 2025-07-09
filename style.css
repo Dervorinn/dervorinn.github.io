@@ -292,6 +292,8 @@ h1 {
   margin: 0;
   max-width: 100%;
   box-sizing: border-box;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
 }
 
 #weatherBox .interactive, #editableBox .interactive, #przekazanie {
@@ -432,4 +434,85 @@ h1 {
   background: #fff;
   border: 1px dashed #888;
   border-radius: 4px;
+}
+
+#coCheckboxContainer {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-left: 4px solid #cc0000;
+  padding: 1em;
+  margin-bottom: 1.5em;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+#coCheckboxContainer label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* === Stylizacja pola formularza CO === */
+#coForm {
+  margin-top: 1em;
+}
+
+#coForm input[type="text"] {
+  width: 200px;
+  padding: 6px 10px;
+  margin: 4px 6px 6px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+#coForm label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-right: 12px;
+  font-size: 14px;
+}
+
+#coForm input[type="checkbox"] {
+  transform: scale(1.1);
+}
+
+.co-toggle-label {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #000;
+  color: #fff;
+  border: 1px solid #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  user-select: none;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* Hover & Active */
+.co-toggle-label:hover {
+  background-color: #111;
+  transform: translateY(-1px);
+}
+
+.co-toggle-label:active {
+  background-color: #1a1a1a;
+  transform: scale(0.98);
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.05);
+}
+
+/* Aktywny (checked) stan przez JS lub :has jeśli obsługiwane) */
+#coCheckbox:checked + .co-toggle-label,
+.co-toggle-label.active {
+  background-color: #1a1a1a;
+  transform: scale(0.98);
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.05);
 }

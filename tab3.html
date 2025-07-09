@@ -9,6 +9,25 @@
 <body>
 
 <div class="container">
+  <div class="form-check mb-3">
+  <label for="coCheckbox" class="copy-button co-toggle-label">
+  <input type="checkbox" id="coCheckbox" onchange="toggleCOForm()" style="display:none;">
+  Tlenek węgla
+</label>
+  <div id="coForm" style="display: none; margin-bottom: 1em;">
+    <div class="d-flex gap-2">
+      <input type="text" id="aptNumber" placeholder="Nr mieszkania" oninput="updateCODescription()">
+      <input type="text" id="checkedFlats" placeholder="Sprawdzone mieszkania" oninput="updateCODescription()">
+      <input type="text" id="uncheckedFlats" placeholder="Brak pomiaru - numery" oninput="updateCODescription()">
+    </div>
+    <div style="margin-top: 0.5em;">
+      <label><input type="checkbox" id="evacuation" onchange="updateCODescription()"> Ewakuacja</label>
+      <label><input type="checkbox" id="kpp" onchange="updateCODescription()"> KPP</label>
+      <label><input type="checkbox" id="drager" onchange="updateCODescription()"> Drager</label>
+      <label><input type="checkbox" id="ban" onchange="updateCODescription()"> Zakaz</label>
+    </div>
+  </div>
+<div>
   <h2>33.1 Opis</h2>
   <div id="editableBox" class="editable" contenteditable="true">
     <span id="interactiveText1" class="interactive">źródło zgłoszenia</span>
@@ -19,7 +38,7 @@
     <br>
     <span>Działania straży pożarnej polegały na:</span>
     <div id="dzialaniaContainer"></div>
-    <br> 
+    <div id="coOutput" style="white-space: pre-line; margin: 1em 0;"></div>
     <div id="additionalContainer"></div>
     Organizacja łączności: korzystano z kanału – 
     <span class="interactive kanal-kom">B025</span>, 

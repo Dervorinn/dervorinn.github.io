@@ -658,7 +658,6 @@ function setupInteractiveHandlers() {
 </label><br>
 <label><input type="checkbox" id="pressureToggle"> Uwzględnij ciśnienie</label><br>
 <input type="text" id="pressureVal" placeholder="Ciśnienie (hPa)" style="width: 100px;">
-
   `;
 
         menu.appendChild(formGroup);
@@ -798,7 +797,7 @@ if (pressureVal) {
       menu.style.display = "none";
 
       if (opt.includes("Lokalizacja medycznych działań ratowniczych")) {
-        alert("Pamiętaj o wpisaniu nadzorującego MCM!");
+        alert("Pamiętaj o wpisaniu nadzorującego medyczne czynności ratownicze!");
       }
     };
     menu.appendChild(li);
@@ -813,9 +812,6 @@ if (pressureVal) {
   });
   menu.appendChild(input);
 }
-
-
-
       else {
         const id = el.id;
         optionsMap[id]?.forEach(opt => {
@@ -840,8 +836,6 @@ if (pressureVal) {
       e.stopPropagation();
     };
   });
-
-
 }
 
 window.stopnieOptions = [
@@ -1177,18 +1171,78 @@ function addAdditionalLine(isDuplicate = false) {
 }
 
 window.additionalOptions = [
-  "Dokumentacji fotograficznej z miejsca zdarzenia nie sporządzono ze względu na fakt, iż usunięty konar nie przekraczał 30% korony drzewa.",
-  "Wykonano dokumentację fotograficzną.",
-  "Przybyły na miejsce ZRM po przebadaniu osoby poszkodowanej podjął decyzję o konieczności przetransportowania osoby do szpitala xxxxxxx celem dalszej diagnostyki.",
-  "Wydłużony czas dojazdu spowodowany był nieprecyzyjnym zgłoszeniem.",
-  "Lokalizacja medycznych działań ratowniczych: xx.xx.xxxx r. godz. xx:xx.",
+  "\nDokumentacji fotograficznej z miejsca zdarzenia nie sporządzono ze względu na fakt, iż usunięty konar nie przekraczał 30% korony drzewa.",
+  "\nWykonano dokumentację fotograficzną.",
+  "\nPrzybyły na miejsce ZRM po przebadaniu osoby poszkodowanej podjął decyzję o konieczności przetransportowania osoby do szpitala xxxxxxx celem dalszej diagnostyki.",
+  "\nWydłużony czas dojazdu spowodowany był nieprecyzyjnym zgłoszeniem.",
+  "\nLokalizacja medycznych działań ratowniczych: xx.xx.xxxx r. godz. xx:xx.",
 ];
 
 window.addEventListener("DOMContentLoaded", () => {
   addAdditionalLine(false);
 });
 
+function toggleCOForm() {
+  const checkbox = document.getElementById("coCheckbox");
+  const form = document.getElementById("coForm");
+  const label = document.querySelector(".co-toggle-label");
+  const isChecked = checkbox.checked;
 
+  form.style.display = isChecked ? "block" : "none";
+  label.classList.toggle("active", isChecked);
+
+  if (isChecked) {
+    const weatherResult = document.getElementById("weatherResult");
+    if (weatherResult) {
+      weatherResult.click(); // otwiera menu pogodowe
+
+      // daj czas na wygenerowanie elementów, potem zaznacz checkbox i zamknij menu
+      setTimeout(() => {
+        const pressureCheckbox = document.getElementById("pressureToggle");
+        if (pressureCheckbox) {
+          pressureCheckbox.checked = true;
+          pressureCheckbox.dispatchEvent(new Event("change"));
+        }
+
+        // ⛔️ teraz zamknij menu po chwili
+        if (window.menu) {
+          window.menu.style.display = "none";
+        }
+      }, 150); // 150ms wystarczy
+    }
+
+    updateCODescription();
+  } else {
+    document.getElementById("coOutput").textContent = "";
+  }
+}
+
+function updateCODescription() {
+  const checkbox = document.getElementById("coCheckbox");
+  if (!checkbox.checked) {
+    document.getElementById("coOutput").textContent = "";
+    return;
+  }
+
+  const apt = document.getElementById("aptNumber").value || "___";
+  const flats = document.getElementById("checkedFlats").value || "brak danych";
+  const unflats = document.getElementById("uncheckedFlats").value || "nie dotyczy";
+  const evac = document.getElementById("evacuation").checked;
+  const kpp = document.getElementById("kpp").checked;
+  const drager = document.getElementById("drager").checked;
+  const ban = document.getElementById("ban").checked;
+
+  const text = 
+`\n1. Ewakuacja - ${evac ? 'przeprowadzono' : 'nie przeprowadzono'}.
+2. KPP - lokatorzy mieszkania nr ${apt} ${kpp ? 'wymagali' : 'nie wymagali'} udzielenia KPP oraz wezwania ZRM na miejsce zdarzenia.
+3. Pomiary w miejscu zdarzenia - wykonano pomiary na obecność tlenku węgla w mieszkaniu nr ${apt} - I pomiar wynik 0 ppm., po przewietrzeniu mieszkania - wynik wskazywał 0 ppm.
+4. Użyty sprzęt - sprzęt pomiarowy ${drager ? 'Drager X-am 2500' : 'MSA Altair 4X'} oraz sprzęt ochrony dróg oddechowych.
+5. Pomiary w pozostałej części obiektu, sprawdzono mieszkania w tym samym pionie: mieszkania nr: ${flats} przy włączonym piecyku - wynik 0 ppm, po przewietrzeniu mieszkań - wynik 0 ppm. Nie dokonano pomiarów w mieszkaniach nr: ${unflats} - brak dostępu do mieszkań.
+6. Ewentualny zakaz użytkowania - ${ban ? 'wydano' : 'nie wydano. Zalecono wietrzenie mieszkania.'}
+7. Sposób przekazania miejsca zdarzenia - miejsce zdarzenia przekazano lokatorce mieszkania nr ${apt}.`;
+
+  document.getElementById("coOutput").textContent = text;
+}
   
 function degToDirection(deg) {
     const dirs = ["północny", "północno-wschodni", "wschodni", "południowo-wschodni", "południowy", "południowo-zachodni", "zachodni", "północno-zachodni"];
