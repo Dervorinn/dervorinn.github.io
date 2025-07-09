@@ -1,19 +1,70 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
   <meta charset="UTF-8">
   <title>Podstawowy</title>
   <link rel="stylesheet" href="style.css">
   <script defer src="script3.js"></script>
 </head>
-<body>
 
-<div class="container">
+<body>
   <div class="form-check mb-3">
-  <label for="coCheckbox" class="copy-button co-toggle-label">
-  <input type="checkbox" id="coCheckbox" onchange="toggleCOForm()" style="display:none;">
-  Tlenek węgla
-</label>
+    <label for="coCheckbox" class="copy-button co-toggle-label">
+      <input type="checkbox" id="coCheckbox" onchange="toggleCOForm()" style="display:none;">
+      Tlenek węgla
+    </label>
+    <label for="dispatchToggle" class="copy-button co-toggle-label">
+      <input type="checkbox" id="dispatchToggle" onchange="toggleDispatchForm()" style="display:none;">
+      Siły i środki przedysponowane
+    </label>
+  </div>
+  <div id="dispatchFormContainer" style="display: none;">
+    <div id="dispatchForm">
+      <h3>Siły i środki przedysponowane</h3>
+      <div class="form-group">
+        <label for="dispatchTime">Data i godzina:</label><br />
+        <input type="datetime-local" id="dispatchTime" />
+      </div>
+      <div class="form-group">
+        <label for="dispatchVehicle">Wybierz pojazd:</label><br />
+        <select id="dispatchVehicle">
+          <option value="GBA -Rt 2/16 MERCEDES, SF 301-21">301-21</option>
+          <option value="GBA -Rt 2,5/25 RENAULT, SF 301-22">301-22</option>
+          <option value="GCBA 8/50 RENAULT, SF 301-27">301-27</option>
+          <option value="SCD 40 IVECO MAGIRUS">301-51</option>
+          <option value="SLRR FORD RANGER I">301-90</option>
+          <option value="GBA -Rt 2,5/25 RENAULT, SF 302-21">302-21</option>
+          <option value="GCBA 5/38/4,6 SCANIA, SF 302-25">302-25</option>
+          <option value="SCRt SCANIA, SF 302-43">302-43</option>
+          <option value="SD 30 IVECO, SF 302-51">302-51</option>
+          <option value="SRRChem SCANIA_Mobilab, SF 302-61">302-61</option>
+          <option value="SLRR FORD RANGER II DRON, SF 302-90">302-90</option>
+          <option value="GBA -Rt 2,7/25 RENAULT, SF 303-21">303-21</option>
+          <option value="GCBA 5/32/4,8 SCANIA, SF 303-25">303-25</option>
+          <option value="SLRR REXTON, SF 303-90">303-90</option>
+          <option value="GLBM 0,2/1 Ford Transit, SF 329-12">329-12 OSP KOSTUCHNA FORD</option>
+          <option value="SLRR  Isuzu D-MAX, SF 329-13">329-13 OSP KOSTUCHNA Isuzu</option>
+          <option value="GCBA 4,2/37,1/4,3 VOLVO, SF 329-14">329-14 OSP KOSTUCHNA FMX</option>
+          <option value="GBA 2/24/2,5 Renault, SF 329-21">329-21 OSP Dąbrówka Mała Renault</option>
+          <option value="SLKw BUS RENAULT MASTER, SF 329-22">329-22 OSP Dąbrówka Mała Renault Bus</option>
+          <option value="GCBA 3/16/1,6 Scania, SF 329-24">329-24 OSP Dąbrówka Mała Scania</option>
+          <option value="GBA 3/16/4,3 Renault, SF 329-31">329-31 OSP Podlesie Renault</option>
+          <option value="GLBM 0,3 /05 Renault Master, SF 329-32">329-21 OSP Podlesie Renault</option>
+          <option value="GBA 2/24/2,5 RENAULT, SF 329-41">329-41 OSP Szopienice Renault</option>
+          <option value="GCBA 4,5/29,7/4,7 MAN  TGM, SF 329-42">329-42 OSP Szopienice MAN</option>
+          <option value="GCBA 5,1/32/2,5 SCANIA, SF 329-51">329-51 OSP Zarzecze Scania</option>
+          <option value="GLBM 0,2/1 Ford Transit, SF 329-52">329-52 OSP Zarzecze Ford</option>
+          <option value="SLOp NISSAN, SF 329-53">329-53 OSP Zarzecze Nissan</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="meldunekPrefix">Numer meldunku (prefix):</label><br />
+        <input type="text" id="meldunekPrefix" value="120100" maxlength="10" />
+        <input type="text" id="meldunekSuffix" placeholder="x-xxxx" maxlength="6" oninput="formatReportSuffix()" />
+      </div>
+    </div>
+  </div>
   <div id="coForm" style="display: none; margin-bottom: 1em;">
     <div class="d-flex gap-2">
       <input type="text" id="aptNumber" placeholder="Nr mieszkania" oninput="updateCODescription()">
@@ -27,43 +78,45 @@
       <label><input type="checkbox" id="ban" onchange="updateCODescription()"> Zakaz</label>
     </div>
   </div>
-<div>
-  <h2>33.1 Opis</h2>
-  <div id="editableBox" class="editable" contenteditable="true">
-    <span id="interactiveText1" class="interactive">źródło zgłoszenia</span>
-    <div id="defaultText" class="interactive">”wpisz opis zdarzenia...”</div>
-    <br><br>
-    <span id="interactiveText2" class="interactive">Sytuacja zastana/rozpoznanie:</span>
-    <div id="myślniki"></div>
-    <br>
-    <span>Działania straży pożarnej polegały na:</span>
-    <div id="dzialaniaContainer"></div>
-    <div id="coOutput" style="white-space: pre-line; margin: 1em 0;"></div>
-    <div id="additionalContainer"></div>
-    Organizacja łączności: korzystano z kanału – 
-    <span class="interactive kanal-kom">B025</span>, 
-    <span class="interactive kanal-kom">B049</span>.
-    <br>
-    <br>
-    <div id="poziomContainer"></div>
-    <div id="hydrantContainer"></div>
-  </div>
-  <ul id="menu" class="context-menu"></ul>
-  <button class="copy-button" onclick="kopiujZawartosc()">📋 Kopiuj 33.1</button>
-  <button class="copy-button" onclick="kopiujsluzby()">📋 Kopiuj 33.2</button>
-  
-  <h2>33.4 Pogoda</h2>
-  <div id="weatherBox" class="editable" contenteditable="true">
-    <div id="weatherResult" class="interactive">
-      Kliknij tutaj, aby edytować pogodę
+  <div>
+    <h2>33.1 Opis</h2>
+    <div id="editableBox" class="editable" contenteditable="true">
+      <span id="interactiveText1" class="interactive">źródło zgłoszenia</span>
+      <div id="defaultText" class="interactive">”wpisz opis zdarzenia...”</div>
+      <br><br>
+      <span id="interactiveText2" class="interactive">Sytuacja zastana/rozpoznanie:</span>
+      <div id="myślniki"></div>
+      <br>
+      <span>Działania straży pożarnej polegały na:</span>
+      <div id="dzialaniaContainer"></div>
+      <div id="coOutput" style="white-space: pre-line; margin: 1em 0;"></div>
+      <br>
+      <div id="additionalContainer"></div>
+      Organizacja łączności: korzystano z kanału –
+      <span class="interactive kanal-kom">B025</span>,
+      <span class="interactive kanal-kom">B049</span>.
+      <br>
+      <br>
+      <div id="poziomContainer"></div>
+      <div id="hydrantContainer"></div>
+      <br>
+      <div id="dispatchOutput" style="white-space: pre-line;"></div>
     </div>
-  </div>
-  <button class="copy-button" onclick="kopiujPogode()">📋 Kopiuj 33.4</button>
-  <h2>33.5 Przekazanie miejsca zdarzenia</h2>
-  <div id="przekazanieBox" class="editable" contenteditable="true">
-    <div id="przekazanie"class="interactive">
-      Kliknij tutaj, aby edytować przekazanie
+    <ul id="menu" class="context-menu"></ul>
+    <button class="copy-button" onclick="kopiujZawartosc()">📋 Kopiuj 33.1</button>
+    <button class="copy-button" onclick="kopiujsluzby()">📋 Kopiuj 33.2</button>
+    <h2>33.4 Pogoda</h2>
+    <div id="weatherBox" class="editable" contenteditable="true">
+      <div id="weatherResult" class="interactive">
+        Kliknij tutaj, aby edytować pogodę
+      </div>
     </div>
+    <button class="copy-button" onclick="kopiujPogode()">📋 Kopiuj 33.4</button>
+    <h2>33.5 Przekazanie miejsca zdarzenia</h2>
+    <div id="przekazanieBox" class="editable" contenteditable="true">
+      <div id="przekazanie" class="interactive">
+        Kliknij tutaj, aby edytować przekazanie
+      </div>
+    </div>
+    <button class="copy-button" onclick="kopiujprzekazanie()">📋 Kopiuj 33.5</button>
   </div>
-  <button class="copy-button" onclick="kopiujprzekazanie()">📋 Kopiuj 33.5</button>
-</div>

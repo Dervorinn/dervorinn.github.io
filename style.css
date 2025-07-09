@@ -1,166 +1,175 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background: #f7f7f7;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f7f7f7;
 }
 
 .container {
-    padding: 20px;
+  padding: 20px;
 }
 
 h1 {
-    text-align: center;
-    margin-top: 60px;
+  text-align: center;
+  margin-top: 60px;
 }
 
 .navbar {
-    background: #000;
-    color: white;
-    padding: 10px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 0 0 20px 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    animation: slideDown 0.5s ease-out;
-    overflow: visible;
+  background: #000;
+  color: white;
+  padding: 10px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  animation: slideDown 0.5s ease-out;
+  overflow: visible;
 }
 
 .navbar::before {
-    content: "";
-    position: absolute;
-    top: -2px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: #000;
-    z-index: -1;
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #000;
+  z-index: -1;
 }
 
 @keyframes slideDown {
-    from { transform: translateY(-100%); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .navbar-left {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding-left: 80px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-left: 80px;
 }
 
 .navbar-logo-obwoluta {
-    position: absolute;
-    left: 20px;
-    top: 100%;
-    transform: translateY(-80%) scale(0);
-    width: 80px;
-    height: 80px;
-    background: #000;
-    border-radius: 50%;
-    border: 4px solid white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    animation: popIn 0.6s ease-out forwards;
+  position: absolute;
+  left: 20px;
+  top: 100%;
+  transform: translateY(-80%) scale(0);
+  width: 80px;
+  height: 80px;
+  background: #000;
+  border-radius: 50%;
+  border: 4px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  animation: popIn 0.6s ease-out forwards;
 }
 
 @keyframes popIn {
-    to { transform: translateY(-50%) scale(1); }
+  to {
+    transform: translateY(-50%) scale(1);
+  }
 }
 
 .navbar-logo {
-    width: 56px;
-    height: 56px;
-    background: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    color: black;
-    font-size: 24px;
-    transition: transform 0.3s ease;
+  width: 56px;
+  height: 56px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: black;
+  font-size: 24px;
+  transition: transform 0.3s ease;
 }
 
 .navbar-logo:hover {
-    transform: scale(1.15) rotate(5deg);
+  transform: scale(1.15) rotate(5deg);
 }
 
 .navbar-logo span {
-    display: inline-block;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    opacity: 1;
+  display: inline-block;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 1;
 }
 
 .navbar-logo span.fade-out {
-    opacity: 0;
-    transform: translateY(-5px);
+  opacity: 0;
+  transform: translateY(-5px);
 }
 
 .navbar-logo span.fade-in {
-    opacity: 1;
-    transform: translateY(0);
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .navbar-links button,
 .navbar-links a {
-    background: none;
-    border: none;
-    color: white;
-    margin: 0 12px;
-    font-weight: 500;
-    cursor: pointer;
-    font-size: 1em;
-    transition: color 0.3s ease, transform 0.2s ease;
-    position: relative;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
+  background: none;
+  border: none;
+  color: white;
+  margin: 0 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 1em;
+  transition: color 0.3s ease, transform 0.2s ease;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .navbar-links button:focus,
 .navbar-links button:active,
 .navbar-links button:focus-visible {
-    outline: none;
-    box-shadow: none;
+  outline: none;
+  box-shadow: none;
 }
 
 .navbar-links a::after,
 .navbar-links button::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -4px;
-    width: 100%;
-    height: 2px;
-    background: rgb(255, 213, 0);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s ease;
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 2px;
+  background: rgb(255, 213, 0);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
 }
 
 .navbar-links a:hover,
 .navbar-links button:hover {
-    color: #ffffff;
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+  color: #ffffff;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
 }
 
 .navbar-links a:hover::after,
 .navbar-links button:hover::after {
-    transform: scaleX(1);
+  transform: scaleX(1);
 }
 
 .navbar-right {
-    text-align: right;
-    font-size: 12px;
-    line-height: 1.4;
+  text-align: right;
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .context-menu {
@@ -169,41 +178,39 @@ h1 {
   backdrop-filter: blur(14px) saturate(160%);
   -webkit-backdrop-filter: blur(14px) saturate(160%);
   border: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 0;  /* Usunięcie paddingu */
+  padding: 0;
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   min-width: 200px;
   max-height: 50vh;
-  overflow-y: auto; /* Usuwamy suwak pionowy */
-  overflow-x: hidden; /* Usuwamy suwak poziomy */
+  overflow-y: auto;
+  overflow-x: hidden;
   display: none;
   color: #111;
   animation: fadeIn 0.2s ease-in-out;
-
-  /* Flexbox z wycentrowaniem zawartości */
   display: flex;
-  flex-direction: column; /* Układ kolumnowy */
-  align-items: center; /* Wyśrodkowanie elementów poziomo */
-  justify-content: flex-start; /* Wyrównanie do góry */
-  text-align: center; /* Wyśrodkowanie tekstu */
-  box-sizing: border-box;  /* Zapewnia, że padding i margines nie wpływają na szerokość */
-  margin: 0; /* Brak marginesów */
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  box-sizing: border-box;
+  margin: 0;
 }
 
 .context-menu li,
 .context-menu label,
 .context-menu input[type="text"] {
   display: block;
-  width: 100%; 
+  width: 100%;
   padding: 8px 14px;
   font-size: 14px;
   cursor: pointer;
   border-radius: 8px;
   transition: background 0.2s ease;
-  margin: 0 auto;  
-  text-align: center; 
-  box-sizing: border-box; 
+  margin: 0 auto;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .context-menu li:hover,
@@ -212,20 +219,20 @@ h1 {
 }
 
 .context-menu input[type="text"] {
-  width: calc(100% - 28px); 
-  margin: 6px 0; 
+  width: calc(100% - 28px);
+  margin: 6px 0;
   padding: 6px 10px;
   background: rgba(255, 255, 255, 0.6);
   border: 1px solid rgba(0, 0, 0, 0.1);
   color: #111;
   border-radius: 6px;
-  box-sizing: border-box; /
+  box-sizing: border-box;/
 }
 
 .context-menu input[type="checkbox"] {
   width: 18px;
   height: 18px;
-  border: 2px solid #888; 
+  border: 2px solid #888;
   background-color: transparent;
   position: relative;
   cursor: pointer;
@@ -287,7 +294,9 @@ h1 {
   box-sizing: border-box;
 }
 
-#weatherBox, #editableBox, #przekazanieBox {
+#weatherBox,
+#editableBox,
+#przekazanieBox {
   width: 100%;
   margin: 0;
   max-width: 100%;
@@ -296,7 +305,9 @@ h1 {
   overflow-x: hidden;
 }
 
-#weatherBox .interactive, #editableBox .interactive, #przekazanie {
+#weatherBox .interactive,
+#editableBox .interactive,
+#przekazanie {
   background-color: transparent;
   border: 1px solid #888;
   padding: 4px 8px;
@@ -308,7 +319,8 @@ h1 {
   transition: all 0.3s ease;
 }
 
-#weatherBox .interactive:hover, #editableBox .interactive:hover {
+#weatherBox .interactive:hover,
+#editableBox .interactive:hover {
   background-color: rgba(0, 0, 0, 0.05);
   border-color: #555;
 }
@@ -384,7 +396,8 @@ h1 {
   margin-bottom: 6px;
 }
 
-.form-group input[type="text"], .form-group select {
+.form-group input[type="text"],
+.form-group select {
   width: 100%;
   padding: 8px;
   font-size: 14px;
@@ -423,7 +436,8 @@ h1 {
   box-sizing: border-box;
 }
 
-#defaultText, #interactiveText1 {
+#defaultText,
+#interactiveText1 {
   display: block;
   white-space: pre-wrap !important;
   word-break: break-word;
@@ -455,7 +469,6 @@ h1 {
   cursor: pointer;
 }
 
-/* === Stylizacja pola formularza CO === */
 #coForm {
   margin-top: 1em;
 }
@@ -497,7 +510,6 @@ h1 {
   cursor: pointer;
 }
 
-/* Hover & Active */
 .co-toggle-label:hover {
   background-color: #111;
   transform: translateY(-1px);
@@ -509,9 +521,38 @@ h1 {
   box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.05);
 }
 
-/* Aktywny (checked) stan przez JS lub :has jeśli obsługiwane) */
-#coCheckbox:checked + .co-toggle-label,
+#coCheckbox:checked+.co-toggle-label,
 .co-toggle-label.active {
+  background-color: #1a1a1a;
+  transform: scale(0.98);
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.05);
+}
+
+#btnClear {
+  background-color: #000;
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 15px;
+  font-family: "Segoe UI", sans-serif;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  user-select: none;
+  margin-top: 12px;
+  align-self: center;
+  position: absolute;
+  right: 170px;
+  align-items: flex-center;
+}
+
+#btnClear:hover {
+  background-color: #111;
+  transform: translateY(-1px);
+}
+
+#btnClear:active {
   background-color: #1a1a1a;
   transform: scale(0.98);
   box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.05);

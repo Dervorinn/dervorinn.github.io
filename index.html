@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Generator opisu v 0.5</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="bg-light">
 
   <div class="navbar">
@@ -16,10 +18,11 @@
       <div class="navbar-links">
         <button onclick="loadTab('tab3')">Podstawowy</button>
         <button onclick="loadTab('tab1')">Zapasowy</button>
-        <button onclick="loadTab('tab4')">Przedysponowano</button>
+        <button onclick="loadTab('tab4')">Zasady ewidencjonowania</button>
       </div>
     </div>
     <div class="navbar-right">
+      <button id="btnClear">Wyczyść</button>
       &copy; Krzysztof Kokoszczyk<br>
       v 0.5 200725
     </div>
@@ -27,4 +30,5 @@
   <div id="tabContent" style="padding: 16px; padding-top: 100px;"></div>
   <script src="main.js"></script>
 </body>
+
 </html>

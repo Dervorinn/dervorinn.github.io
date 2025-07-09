@@ -62,7 +62,7 @@ function addResponderLine() {
     <span class="interactive responder-label">-</span>
     <span class="responder-text" data-selected="[]"></span>
   `;
-  myślniki.appendChild(line);
+  window.myślniki.appendChild(line);
   setupInteractiveHandlers();
   updateAllResponderPunctuation();
 }
@@ -91,7 +91,7 @@ function updateRespondersText(textSpan, selected) {
   }
   textSpan.textContent = text;
 
-  const allLines = [...myślniki.querySelectorAll(".responder-line")];
+  const allLines = [...window.window.myślniki.querySelectorAll(".responder-line")];
   const lastLine = allLines[allLines.length - 1];
   if (text && textSpan.closest(".responder-line") === lastLine) {
     addResponderLine();
@@ -101,7 +101,7 @@ function updateRespondersText(textSpan, selected) {
 }
 
 function updateAllResponderPunctuation() {
-  const lines = [...myślniki.querySelectorAll(".responder-line")];
+  const lines = [...window.myślniki.querySelectorAll(".responder-line")];
   lines.forEach((line, i) => {
     const span = line.querySelector(".responder-text");
     if (!span) return;
@@ -137,10 +137,10 @@ function updateAllActionPunctuation() {
 }
 
 function renderCheckboxMenu(textSpan) {
-  menu.innerHTML = "";
+  window.menu.innerHTML = "";
   let selected = JSON.parse(textSpan.dataset.selected || "[]");
 
-  checkboxOptions.forEach(option => {
+  window.checkboxOptions.forEach(option => {
     const label = document.createElement("label");
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
@@ -158,7 +158,7 @@ function renderCheckboxMenu(textSpan) {
 
     label.appendChild(checkbox);
     label.appendChild(document.createTextNode(option));
-    menu.appendChild(label);
+    window.menu.appendChild(label);
   });
 
   const li = document.createElement("li");
@@ -167,22 +167,22 @@ function renderCheckboxMenu(textSpan) {
     textSpan.textContent = "Nikt nie uskarża się na żadne dolegliwości - brak wskazań do KPP.";
     textSpan.dataset.selected = JSON.stringify(["KPP"]);
     delete textSpan.dataset.custom;
-    menu.style.display = "none";
+    window.menu.style.display = "none";
     updateRespondersText(textSpan, ["KPP"]);
   });
-  menu.appendChild(li);
+  window.menu.appendChild(li);
 
   const liBrakSluzb = document.createElement("li");
-liBrakSluzb.textContent = "Sytuacja zgodna ze zgłoszeniem";
-liBrakSluzb.addEventListener("click", () => {
-  const customText = "sytuacja zgodna ze zgłoszeniem.";
-  textSpan.textContent = customText;
-  textSpan.dataset.selected = JSON.stringify([]);
-  textSpan.dataset.custom = customText;
-  menu.style.display = "none";
-  updateRespondersText(textSpan, []);
-});
-menu.appendChild(liBrakSluzb);
+  liBrakSluzb.textContent = "Sytuacja zgodna ze zgłoszeniem";
+  liBrakSluzb.addEventListener("click", () => {
+    const customText = "sytuacja zgodna ze zgłoszeniem.";
+    textSpan.textContent = customText;
+    textSpan.dataset.selected = JSON.stringify([]);
+    textSpan.dataset.custom = customText;
+    window.menu.style.display = "none";
+    updateRespondersText(textSpan, []);
+  });
+  window.menu.appendChild(liBrakSluzb);
 
   const manual = document.createElement("input");
   manual.type = "text";
@@ -198,31 +198,31 @@ menu.appendChild(liBrakSluzb);
       updateRespondersText(textSpan, []);
     }
   });
-  menu.appendChild(manual);
+  window.menu.appendChild(manual);
 }
 
 function setupInteractiveHandlers() {
   document.querySelectorAll(".interactive").forEach(el => {
     el.onclick = (e) => {
       const rect = el.getBoundingClientRect();
-      menu.style.top = `${rect.bottom + window.scrollY}px`;
-      menu.style.left = `${rect.left + window.scrollX}px`;
-      menu.style.display = "block";
-      menu.innerHTML = "";
+      window.menu.style.top = `${rect.bottom + window.scrollY}px`;
+      window.menu.style.left = `${rect.left + window.scrollX}px`;
+      window.menu.style.display = "block";
+      window.menu.innerHTML = "";
 
       if (el.classList.contains("responder-label")) {
         renderCheckboxMenu(el.nextElementSibling);
 
       } else if (el.classList.contains("action-label")) {
         const textSpan = el.nextElementSibling;
-        actionOptions.forEach(option => {
+        window.actionOptions.forEach(option => {
           const li = document.createElement("li");
           li.textContent = option;
           li.onclick = () => {
             updateActionText(textSpan, option);
-            menu.style.display = "none";
+            window.menu.style.display = "none";
           };
-          menu.appendChild(li);
+          window.menu.appendChild(li);
         });
 
         const input = document.createElement("input");
@@ -232,7 +232,7 @@ function setupInteractiveHandlers() {
         input.addEventListener("input", () => {
           updateActionText(textSpan, input.value.trim());
         });
-        menu.appendChild(input);
+        window.menu.appendChild(input);
 
       } else if (el.id === "defaultText") {
         const input = document.createElement("input");
@@ -245,7 +245,7 @@ function setupInteractiveHandlers() {
         input.addEventListener("input", () => {
           el.textContent = `„${input.value}”`;
         });
-        menu.appendChild(input);
+        window.menu.appendChild(input);
       }
 
       else if (el.id === "przekazanie") {
@@ -264,9 +264,9 @@ function setupInteractiveHandlers() {
           li.textContent = opt;
           li.onclick = () => {
             el.textContent = opt;
-            menu.style.display = "none";
+            window.menu.style.display = "none";
           };
-          menu.appendChild(li);
+          window.menu.appendChild(li);
         });
 
         const input = document.createElement("input");
@@ -276,19 +276,19 @@ function setupInteractiveHandlers() {
         input.addEventListener("input", () => {
           el.textContent = input.value;
         });
-        menu.appendChild(input);
+        window.menu.appendChild(input);
       }
 
       else if (el.classList.contains("poziom-label")) {
         const textSpan = el.nextElementSibling;
-        stopnieOptions.forEach(opt => {
+        window.stopnieOptions.forEach(opt => {
           const li = document.createElement("li");
           li.textContent = opt;
           li.onclick = () => {
             textSpan.dataset.stopien = opt;
             updatePoziomText(textSpan);
           };
-          menu.appendChild(li);
+          window.menu.appendChild(li);
         });
         const inputName = document.createElement("input");
         inputName.type = "text";
@@ -298,7 +298,7 @@ function setupInteractiveHandlers() {
           textSpan.dataset.name = inputName.value;
           updatePoziomText(textSpan);
         });
-        menu.appendChild(inputName);
+        window.menu.appendChild(inputName);
         const inputFrom = document.createElement("input");
         const inputTo = document.createElement("input");
         function formatHour(value) {
@@ -322,10 +322,10 @@ function setupInteractiveHandlers() {
           updatePoziomText(textSpan);
         });
 
-        menu.appendChild(document.createTextNode(" od "));
-        menu.appendChild(inputFrom);
-        menu.appendChild(document.createTextNode(" do "));
-        menu.appendChild(inputTo);
+        window.menu.appendChild(document.createTextNode(" od "));
+        window.menu.appendChild(inputFrom);
+        window.menu.appendChild(document.createTextNode(" do "));
+        window.menu.appendChild(inputTo);
 
         const dup = document.createElement("label");
         const checkbox = document.createElement("input");
@@ -338,7 +338,7 @@ function setupInteractiveHandlers() {
         });
         dup.appendChild(checkbox);
         dup.appendChild(document.createTextNode(" Powiel"));
-        menu.appendChild(dup);
+        window.menu.appendChild(dup);
 
       } else if (el.classList.contains("kdr-text")) {
         const checkbox = document.createElement("input");
@@ -363,13 +363,13 @@ function setupInteractiveHandlers() {
               newContainer.className = "kdr-rights-container";
               el.parentElement.appendChild(newContainer);
             }
-            menu.style.display = "none";
+            window.menu.style.display = "none";
             setTimeout(() => el.click(), 0);
           } else {
             if (prawaContainer) prawaContainer.remove();
           }
         });
-        menu.appendChild(label);
+        window.menu.appendChild(label);
 
         if (el.dataset.korzystał === "tak") {
           const kdrRights = [
@@ -389,10 +389,10 @@ function setupInteractiveHandlers() {
           if (rights.length > 0) {
             const formattedRights = rights.map((item, index) => {
               const isLast = index === rights.length - 1;
-              return `- ${item}${isLast ? '.' : ','}`;
+              return `- ${item}${isLast ? "." : ","}`;
             }).join("");
 
-            outputText += `\n${formattedRights}`;
+            window.outputText += `\n${formattedRights}`;
           }
 
           const container = document.createElement("div");
@@ -426,7 +426,7 @@ function setupInteractiveHandlers() {
               if (rights.length > 0) {
                 const formattedRights = rights.map((item, index) => {
                   const isLast = index === rights.length - 1;
-                  return `- ${item}${isLast ? '.' : ','}`;
+                  return `- ${item}${isLast ? "." : ","}`;
                 }).join("<br>");
 
                 el.parentElement.querySelector(".kdr-rights-container").innerHTML = formattedRights;
@@ -436,7 +436,7 @@ function setupInteractiveHandlers() {
             });
           });
 
-          menu.appendChild(container);
+          window.menu.appendChild(container);
         }
       } else if (el.classList.contains("hydrant-label")) {
         const span = el.nextElementSibling;
@@ -474,7 +474,7 @@ function setupInteractiveHandlers() {
             container.appendChild(label);
           });
 
-          menu.appendChild(container);
+          window.menu.appendChild(container);
         });
 
         const ulInput = document.createElement("input");
@@ -482,9 +482,8 @@ function setupInteractiveHandlers() {
         ulInput.style.display = "block";
         ulInput.style.marginBottom = "6px";
         ulInput.value = span.dataset.ul || "";
-        menu.appendChild(ulInput);
+        window.menu.appendChild(ulInput);
 
-        // 🔻 Kontener na podpowiedzi
         const ulList = document.createElement("ul");
         ulList.className = "suggestion-list";
         ulList.style.position = "absolute";
@@ -505,7 +504,7 @@ function setupInteractiveHandlers() {
 
           if (!query) return;
 
-          const results = hydrantJsonData
+          const results = window.hydrantJsonData
             .map(h => h.adres)
             .filter(adres => adres.toLowerCase().includes(query))
             .slice(0, 10);
@@ -518,18 +517,14 @@ function setupInteractiveHandlers() {
             li.addEventListener("click", () => {
               ulInput.value = adres;
               ulList.innerHTML = "";
-
-              // Wstaw dane do span
               span.dataset.ul = adres;
-              const hydrant = hydrantJsonData.find(h => h.adres === adres);
+              const hydrant = window.hydrantJsonData.find(h => h.adres === adres);
               if (hydrant) {
                 span.dataset.typ = hydrant.typ;
                 span.dataset.stan = hydrant.stan;
                 span.dataset.ozn = hydrant.ozn;
               }
-
-              // zaznacz radio buttony zgodnie z nowymi danymi
-              menu.querySelectorAll("input[type=radio]").forEach(radio => {
+              window.menu.querySelectorAll("input[type=radio]").forEach(radio => {
                 if (
                   (radio.name.startsWith("typ") && radio.value === hydrant.typ) ||
                   (radio.name.startsWith("stan") && radio.value === hydrant.stan) ||
@@ -545,7 +540,7 @@ function setupInteractiveHandlers() {
           });
         });
         document.addEventListener("click", (e) => {
-          if (!menu.contains(e.target)) {
+          if (!window.menu.contains(e.target)) {
             ulList.innerHTML = "";
           }
         });
@@ -554,7 +549,7 @@ function setupInteractiveHandlers() {
         infoLine.style.fontSize = "13px";
         infoLine.style.marginBottom = "4px";
         infoLine.style.color = "#444";
-        menu.appendChild(infoLine);
+        window.menu.appendChild(infoLine);
         ulInput.setAttribute("list", "hydrant-ulice");
         ulInput.placeholder = "Wpisz adres...";
         ulInput.style.display = "block";
@@ -564,12 +559,12 @@ function setupInteractiveHandlers() {
         ulInput.addEventListener("click", ev => ev.stopPropagation());
         ulInput.addEventListener("input", () => {
           span.dataset.ul = ulInput.value;
-          const hydrant = hydrantJsonData.find(h => h.adres === ulInput.value);
+          const hydrant = window.hydrantJsonData.find(h => h.adres === ulInput.value);
           if (hydrant) {
             span.dataset.typ = hydrant.typ;
             span.dataset.stan = hydrant.stan;
             span.dataset.ozn = hydrant.ozn;
-            menu.querySelectorAll("input[type=radio]").forEach(radio => {
+            window.menu.querySelectorAll("input[type=radio]").forEach(radio => {
               if (
                 (radio.name.startsWith("typ") && radio.value === hydrant.typ) ||
                 (radio.name.startsWith("stan") && radio.value === hydrant.stan) ||
@@ -582,11 +577,11 @@ function setupInteractiveHandlers() {
 
           updateHydrantText(span);
         });
-        menu.appendChild(ulInput);
+        window.menu.appendChild(ulInput);
 
         const datalist = document.createElement("datalist");
         datalist.id = "hydrant-ulice";
-        menu.appendChild(datalist);
+        window.menu.appendChild(datalist);
 
         const jsonInput = document.createElement("input");
         jsonInput.type = "file";
@@ -594,8 +589,7 @@ function setupInteractiveHandlers() {
         jsonInput.style.display = "block";
         jsonInput.style.marginBottom = "6px";
         jsonInput.addEventListener("click", ev => ev.stopPropagation());
-        //jsonInput.addEventListener("change", handleHydrantJsonLoad);
-        menu.appendChild(jsonInput);
+        window.menu.appendChild(jsonInput);
 
         const checkboxOptions = [
           {
@@ -621,7 +615,7 @@ function setupInteractiveHandlers() {
 
           label.appendChild(checkbox);
           label.appendChild(document.createTextNode(" " + opt.label));
-          menu.appendChild(label);
+          window.menu.appendChild(label);
         });
 
       }
@@ -660,7 +654,7 @@ function setupInteractiveHandlers() {
 <input type="text" id="pressureVal" placeholder="Ciśnienie (hPa)" style="width: 100px;">
   `;
 
-        menu.appendChild(formGroup);
+        window.menu.appendChild(formGroup);
 
         const updateLive = () => {
           const t = document.getElementById("temperatureInput").value.trim();
@@ -694,20 +688,18 @@ function setupInteractiveHandlers() {
 
           result.innerText = parts.length ? parts.join(", ") + "." : "Kliknij tutaj, aby edytować pogodę";
         };
-        if (weatherDataAuto) {
+        if (window.weatherDataAuto) {
           const tIn = document.getElementById("temperatureInput");
           const wsIn = document.getElementById("windSpeedInput");
           const wdSel = document.getElementById("windDirSelect");
           const pVal = document.getElementById("pressureVal");
           const pToggle = document.getElementById("pressureToggle");
 
-          if (tIn) tIn.value = weatherDataAuto.t;
-          if (wsIn) wsIn.value = weatherDataAuto.ws;
-          if (wdSel) wdSel.value = weatherDataAuto.wd;
-          if (pVal) pVal.value = weatherDataAuto.p;
+          if (tIn) tIn.value = window.weatherDataAuto.t;
+          if (wsIn) wsIn.value = window.weatherDataAuto.ws;
+          if (wdSel) wdSel.value = window.weatherDataAuto.wd;
+          if (pVal) pVal.value = window.weatherDataAuto.p;
           if (pToggle) pToggle.checked = false;
-
-          // wyzwól ręcznie input/change, żeby od razu uaktualnić tekst
           const fireEvent = (el, type = "input") => {
             if (el) el.dispatchEvent(new Event(type));
           };
@@ -722,46 +714,24 @@ function setupInteractiveHandlers() {
         ["temperatureInput", "weatherConditionSelect", "windSpeedInput", "windDirSelect"].forEach(id => {
           const el = document.getElementById(id);
           if (el) {
-          el.addEventListener("input", updateLive);
-          el.addEventListener("change", updateLive);
-        } else {
-          console.warn(`Element #${id} nie istnieje w DOM`);
+            el.addEventListener("input", updateLive);
+            el.addEventListener("change", updateLive);
+          } else {
+            console.warn(`Element #${id} nie istnieje w DOM`);
+          }
+        });
+        const pressureToggle = document.getElementById("pressureToggle");
+        if (pressureToggle) {
+          pressureToggle.addEventListener("change", updateLive);
         }
-      });
-const pressureToggle = document.getElementById("pressureToggle");
-if (pressureToggle) {
-  pressureToggle.addEventListener("change", updateLive);
-}
 
-const pressureVal = document.getElementById("pressureVal");
-if (pressureVal) {
-  pressureVal.addEventListener("input", updateLive);
-}
+        const pressureVal = document.getElementById("pressureVal");
+        if (pressureVal) {
+          pressureVal.addEventListener("input", updateLive);
+        }
 
         e.stopPropagation();
         return;
-        const id = el.id;
-        if (optionsMap[id]) {
-          optionsMap[id].forEach(opt => {
-            const li = document.createElement("li");
-            li.textContent = opt + ":";
-            li.onclick = () => {
-              el.textContent = opt + ":";
-              menu.style.display = "none";
-            };
-            menu.appendChild(li);
-          });
-
-          const input = document.createElement("input");
-          input.type = "text";
-          input.placeholder = "Wpisz własną...";
-          input.addEventListener("click", ev => ev.stopPropagation());
-          input.addEventListener("input", () => {
-            el.textContent = input.value.trim() + ":";
-          });
-          menu.appendChild(input);
-        }
-
       }
       else if (el.classList.contains("kanal-kom")) {
         const kanały = ["B004", "B025", "B028", "B049", "B050",];
@@ -771,9 +741,9 @@ if (pressureVal) {
           li.textContent = opt;
           li.onclick = () => {
             el.textContent = opt;
-            menu.style.display = "none";
+            window.menu.style.display = "none";
           };
-          menu.appendChild(li);
+          window.menu.appendChild(li);
         });
 
         const input = document.createElement("input");
@@ -783,45 +753,45 @@ if (pressureVal) {
         input.addEventListener("input", () => {
           el.textContent = input.value.trim();
         });
-        menu.appendChild(input);
+        window.menu.appendChild(input);
       }
       else if (el.classList.contains("additional-label")) {
-      const span = el.nextElementSibling;
-      menu.innerHTML = "";
+        const span = el.nextElementSibling;
+        window.menu.innerHTML = "";
 
-  window.additionalOptions.forEach(opt => {
-    const li = document.createElement("li");
-    li.textContent = opt;
-    li.onclick = () => {
-      span.textContent = opt;
-      menu.style.display = "none";
+        window.additionalOptions.forEach(opt => {
+          const li = document.createElement("li");
+          li.textContent = opt;
+          li.onclick = () => {
+            span.textContent = opt;
+            window.menu.style.display = "none";
 
-      if (opt.includes("Lokalizacja medycznych działań ratowniczych")) {
-        alert("Pamiętaj o wpisaniu nadzorującego medyczne czynności ratownicze!");
+            if (opt.includes("Lokalizacja medycznych działań ratowniczych")) {
+              alert("Pamiętaj o wpisaniu nadzorującego medyczne czynności ratownicze!");
+            }
+          };
+          window.menu.appendChild(li);
+        });
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = "Wpisz własną treść...";
+        input.addEventListener("click", e => e.stopPropagation());
+        input.addEventListener("input", () => {
+          span.textContent = input.value.trim();
+        });
+        window.menu.appendChild(input);
       }
-    };
-    menu.appendChild(li);
-  });
-
-  const input = document.createElement("input");
-  input.type = "text";
-  input.placeholder = "Wpisz własną treść...";
-  input.addEventListener("click", e => e.stopPropagation());
-  input.addEventListener("input", () => {
-    span.textContent = input.value.trim();
-  });
-  menu.appendChild(input);
-}
       else {
         const id = el.id;
-        optionsMap[id]?.forEach(opt => {
+        window.optionsMap[id]?.forEach(opt => {
           const li = document.createElement("li");
           li.textContent = opt + ":";
           li.onclick = () => {
             el.textContent = opt + ":";
-            menu.style.display = "none";
+            window.menu.style.display = "none";
           };
-          menu.appendChild(li);
+          window.menu.appendChild(li);
         });
 
         const input = document.createElement("input");
@@ -831,7 +801,7 @@ if (pressureVal) {
         input.addEventListener("input", () => {
           el.textContent = input.value.trim() + ":";
         });
-        menu.appendChild(input);
+        window.menu.appendChild(input);
       }
       e.stopPropagation();
     };
@@ -896,119 +866,119 @@ function addPoziomLine(isDuplicate = false) {
   setupInteractiveHandlers();
   updatePoziomPunctuation();
 }
-  function updatePoziomText(span) {
-    span.classList.add("updating");
+function updatePoziomText(span) {
+  span.classList.add("updating");
 
-    const stopien = span.dataset.stopien || "";
-    const name = span.dataset.name || "";
-    const from = span.dataset.from || "";
-    const to = span.dataset.to || "";
+  const stopien = span.dataset.stopien || "";
+  const name = span.dataset.name || "";
+  const from = span.dataset.from || "";
+  const to = span.dataset.to || "";
 
-    let text = "";
-    if (stopien) text += stopien;
-    if (name) text += (text ? " " : "") + name;
-    if (from) text += (text ? " od godz. " : "od ") + from;
-    if (to) text += (from ? " do godz. " : "do ") + to;
+  let text = "";
+  if (stopien) text += stopien;
+  if (name) text += (text ? " " : "") + name;
+  if (from) text += (text ? " od godz. " : "od ") + from;
+  if (to) text += (from ? " do godz. " : "do ") + to;
 
-    text = text.trim();
-    if (text) {
-      span.textContent = text.replace(/[\s.,]*$/, ".");
-      span.parentElement.dataset.final = "true";
-    } else {
-      span.textContent = "";
-      span.parentElement.removeAttribute("data-final");
-    }
-    span.classList.remove("updating");
-    setTimeout(updatePoziomPunctuation, 0);
+  text = text.trim();
+  if (text) {
+    span.textContent = text.replace(/[\s.,]*$/, ".");
+    span.parentElement.dataset.final = "true";
+  } else {
+    span.textContent = "";
+    span.parentElement.removeAttribute("data-final");
   }
+  span.classList.remove("updating");
+  setTimeout(updatePoziomPunctuation, 0);
+}
 
-  function addHydrantLine() {
-    const line = document.createElement("div");
-    line.className = "responder-line";
-    const lineId = "hydrant-" + Date.now();
-    line.dataset.lineId = lineId;
+function addHydrantLine() {
+  const line = document.createElement("div");
+  line.className = "responder-line";
+  const lineId = "hydrant-" + Date.now();
+  line.dataset.lineId = lineId;
 
-    line.innerHTML =
-      `
+  line.innerHTML =
+    `
     <span class="interactive hydrant-label">Hydrant</span>: 
     <span class="hydrant-text" data-typ="" data-stan="" data-ozn="" data-ul="" data-niska-temp="false" data-line-id="${lineId}"></span>
   `;
 
-    document.getElementById("hydrantContainer").appendChild(line);
-    setupInteractiveHandlers();
-  }
+  document.getElementById("hydrantContainer").appendChild(line);
+  setupInteractiveHandlers();
+}
 
 function updateHydrantText(span) {
-    const typ = span.dataset.typ || "";
-    const stan = span.dataset.stan || "";
-    const ozn = span.dataset.ozn || "";
-    const ul = span.dataset.ul || "";
+  const typ = span.dataset.typ || "";
+  const stan = span.dataset.stan || "";
+  const ozn = span.dataset.ozn || "";
+  const ul = span.dataset.ul || "";
 
-    const temp = span.dataset.niskaTemp === "true";
-    const wieleZdarzen = span.dataset.wieleZdarzen === "true";
-    if (wieleZdarzen) {
-      span.textContent = "Nie sprawdzono ze względu na mnogość zdarzeń.";
-      return;
-    }
-    if (!typ && !ozn && !ul && !stan) {
-      span.textContent = "";
-      return;
-    }
-    let text = typ;
-    if (stan) text += `, ${stan}`;
-    if (ozn) text += `, ${ozn}`;
-    if (ul) text += ` - ul. ${ul}`;
-    text += temp ? " - nie sprawdzono ze względu na ujemną temperaturę." : ".";
-
-    span.textContent = text;
+  const temp = span.dataset.niskaTemp === "true";
+  const wieleZdarzen = span.dataset.wieleZdarzen === "true";
+  if (wieleZdarzen) {
+    span.textContent = "Nie sprawdzono ze względu na mnogość zdarzeń.";
+    return;
   }
+  if (!typ && !ozn && !ul && !stan) {
+    span.textContent = "";
+    return;
+  }
+  let text = typ;
+  if (stan) text += `, ${stan}`;
+  if (ozn) text += `, ${ozn}`;
+  if (ul) text += ` - ul. ${ul}`;
+  text += temp ? " - nie sprawdzono ze względu na ujemną temperaturę." : ".";
+
+  span.textContent = text;
+}
 
 function updatePoziomPunctuation() {
-    const allLines = [...document.querySelectorAll("#poziomContainer .responder-line")];
-    const finalLines = allLines.filter(line => line.dataset.final === "true");
+  const allLines = [...document.querySelectorAll("#poziomContainer .responder-line")];
+  const finalLines = allLines.filter(line => line.dataset.final === "true");
 
-    finalLines.forEach((line, i) => {
-      const span = line.querySelector(".poziom-text");
-      if (!span || span.classList.contains("updating")) return;
-      if (span.textContent.trim().endsWith(".")) return;
-      const txt = span.textContent.replace(/[.,]$/, "");
-      span.textContent = txt + (i === finalLines.length - 1 ? "." : ",");
-    });
-  }
-
-  document.addEventListener('click', (e) => {
-    if (!menu.contains(e.target) && !e.target.classList.contains('interactive')) {
-      menu.style.display = 'none';
-    }
+  finalLines.forEach((line, i) => {
+    const span = line.querySelector(".poziom-text");
+    if (!span || span.classList.contains("updating")) return;
+    if (span.textContent.trim().endsWith(".")) return;
+    const txt = span.textContent.replace(/[.,]$/, "");
+    span.textContent = txt + (i === finalLines.length - 1 ? "." : ",");
   });
-function renderRightsLines(container, options) {
-    const rights = [];
-    container.querySelectorAll("input[type='checkbox']").forEach(cb => {
-      if (cb.checked) rights.push(cb.dataset.text);
-    });
+}
 
-    const existing = container.querySelector(".rights-lines");
-    if (existing) existing.remove();
-
-    if (rights.length) {
-      const div = document.createElement("div");
-      div.className = "rights-lines";
-      rights.forEach((right, i) => {
-        const line = document.createElement("div");
-        line.textContent = `- ${right}${i === rights.length - 1 ? "." : ","}`;
-        div.appendChild(line);
-      });
-      container.appendChild(div);
-    }
+document.addEventListener("click", (e) => {
+  if (!window.menu.contains(e.target) && !e.target.classList.contains("interactive")) {
+    window.menu.style.display = "none";
   }
+});
+function renderRightsLines(container, options) {
+  const rights = [];
+  container.querySelectorAll("input[type='checkbox']").forEach(cb => {
+    if (cb.checked) rights.push(cb.dataset.text);
+  });
+
+  const existing = container.querySelector(".rights-lines");
+  if (existing) existing.remove();
+
+  if (rights.length) {
+    const div = document.createElement("div");
+    div.className = "rights-lines";
+    rights.forEach((right, i) => {
+      const line = document.createElement("div");
+      line.textContent = `- ${right}${i === rights.length - 1 ? "." : ","}`;
+      div.appendChild(line);
+    });
+    container.appendChild(div);
+  }
+}
 
 function kopiujZawartosc() {
   const box = document.getElementById("editableBox");
   const selection = window.getSelection();
   const range = document.createRange();
 
-  selection.removeAllRanges(); // Wyczyść istniejące zaznaczenie
-  range.selectNodeContents(box); // Zaznacz całą zawartość #editableBox
+  selection.removeAllRanges();
+  range.selectNodeContents(box);
   selection.addRange(range);
 
   try {
@@ -1020,101 +990,100 @@ function kopiujZawartosc() {
     console.error("Błąd kopiowania:", err);
   }
 
-  selection.removeAllRanges(); // Wyczyść zaznaczenie po skopiowaniu
+  selection.removeAllRanges();
 }
 
-
 function kopiujsluzby() {
-    const ignorowane = ["właściciel", "zgłaszający", "administracja", "brak zgłaszającego"];
-    const sluzby = new Set();
+  const ignorowane = ["właściciel", "zgłaszający", "administracja", "brak zgłaszającego"];
+  const sluzby = new Set();
 
-    document.querySelectorAll("#myślniki .responder-text").forEach(span => {
-      const selected = JSON.parse(span.dataset.selected || "[]");
-      selected.forEach(s => {
-        if (!ignorowane.includes(s)) {
-          sluzby.add(s);
-        }
-      });
+  document.querySelectorAll("#myślniki .responder-text").forEach(span => {
+    const selected = JSON.parse(span.dataset.selected || "[]");
+    selected.forEach(s => {
+      if (!ignorowane.includes(s)) {
+        sluzby.add(s);
+      }
     });
+  });
 
-    const wynik = [...sluzby].join(", ");
-    if (wynik) {
-      const temp = document.createElement("textarea");
-      temp.value = wynik;
-      document.body.appendChild(temp);
-      temp.select();
-      document.execCommand("copy");
-      document.body.removeChild(temp);
-    }
+  const wynik = [...sluzby].join(", ");
+  if (wynik) {
+    const temp = document.createElement("textarea");
+    temp.value = wynik;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand("copy");
+    document.body.removeChild(temp);
   }
+}
 
 function kopiujPogode() {
-    const tekst = document.getElementById("weatherResult").textContent;
-    if (!tekst) return;
+  const tekst = document.getElementById("weatherResult").textContent;
+  if (!tekst) return;
 
-    const temp = document.createElement("textarea");
-    temp.value = tekst;
-    document.body.appendChild(temp);
-    temp.select();
-    document.execCommand("copy");
-    document.body.removeChild(temp);
-  }
+  const temp = document.createElement("textarea");
+  temp.value = tekst;
+  document.body.appendChild(temp);
+  temp.select();
+  document.execCommand("copy");
+  document.body.removeChild(temp);
+}
 
 function kopiujprzekazanie() {
-    const tekst = document.getElementById("przekazanie").textContent;
-    if (!tekst) return;
+  const tekst = document.getElementById("przekazanie").textContent;
+  if (!tekst) return;
 
-    const temp = document.createElement("textarea");
-    temp.value = tekst;
-    document.body.appendChild(temp);
-    temp.select();
-    document.execCommand("copy");
-    document.body.removeChild(temp);
-  }
+  const temp = document.createElement("textarea");
+  temp.value = tekst;
+  document.body.appendChild(temp);
+  temp.select();
+  document.execCommand("copy");
+  document.body.removeChild(temp);
+}
 
-  window.weatherDataAuto = null;
+window.weatherDataAuto = null;
 
 function fetchWeatherFromIMGW() {
-    const url = "https://danepubliczne.imgw.pl/api/data/synop/station/katowice";
+  const url = "https://danepubliczne.imgw.pl/api/data/synop/station/katowice";
 
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        if (!data) {
-          console.error("Brak danych pogodowych z IMGW");
-          return;
-        }
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      if (!data) {
+        console.error("Brak danych pogodowych z IMGW");
+        return;
+      }
 
-        weatherDataAuto = {
-          t: Math.round(data.temperatura),
-          ws: Math.round(data.predkosc_wiatru),
-          wd: degToDirection(parseInt(data.kierunek_wiatru)),
-          p: Math.round(data.cisnienie)
-        };
+      window.weatherDataAuto = {
+        t: Math.round(data.temperatura),
+        ws: Math.round(data.predkosc_wiatru),
+        wd: degToDirection(parseInt(data.kierunek_wiatru)),
+        p: Math.round(data.cisnienie)
+      };
 
-        const summary = [];
+      const summary = [];
 
-        if (weatherDataAuto.t) summary.push(`Temp. ${weatherDataAuto.t}°C`);
-        summary.push("brak opadów");
-        if (weatherDataAuto.ws && weatherDataAuto.wd)
-          summary.push(`wiatr ${weatherDataAuto.ws} km/h ${weatherDataAuto.wd}`);
-        else if (weatherDataAuto.ws)
-          summary.push(`wiatr ${weatherDataAuto.ws} km/h`);
-        else if (weatherDataAuto.wd)
-          summary.push(`wiatr z kierunku ${weatherDataAuto.wd}`);
-        const summaryText = summary.length
-          ? summary.join(", ") + "."
-          : "Kliknij tutaj, aby edytować pogodę";
+      if (window.weatherDataAuto.t) summary.push(`Temp. ${window.weatherDataAuto.t}°C`);
+      summary.push("brak opadów");
+      if (window.weatherDataAuto.ws && window.weatherDataAuto.wd)
+        summary.push(`wiatr ${window.weatherDataAuto.ws} km/h ${window.weatherDataAuto.wd}`);
+      else if (window.weatherDataAuto.ws)
+        summary.push(`wiatr ${window.weatherDataAuto.ws} km/h`);
+      else if (window.weatherDataAuto.wd)
+        summary.push(`wiatr z kierunku ${window.weatherDataAuto.wd}`);
+      const summaryText = summary.length
+        ? summary.join(", ") + "."
+        : "Kliknij tutaj, aby edytować pogodę";
 
-        const weatherResult = document.getElementById("weatherResult");
-        if (weatherResult && weatherResult.textContent.includes("Kliknij")) {
-          weatherResult.textContent = summaryText;
-        }
-      })
-      .catch(err => {
-        console.error("Błąd IMGW:", err);
-      });
-  }
+      const weatherResult = document.getElementById("weatherResult");
+      if (weatherResult && weatherResult.textContent.includes("Kliknij")) {
+        weatherResult.textContent = summaryText;
+      }
+    })
+    .catch(err => {
+      console.error("Błąd IMGW:", err);
+    });
+}
 
 function addAdditionalLine(isDuplicate = false) {
   const container = document.getElementById("additionalContainer");
@@ -1167,7 +1136,7 @@ function addAdditionalLine(isDuplicate = false) {
 `;
 
   container.appendChild(line);
-  setupInteractiveHandlers(); // twoja istniejąca funkcja
+  setupInteractiveHandlers();
 }
 
 window.additionalOptions = [
@@ -1176,6 +1145,7 @@ window.additionalOptions = [
   "\nPrzybyły na miejsce ZRM po przebadaniu osoby poszkodowanej podjął decyzję o konieczności przetransportowania osoby do szpitala xxxxxxx celem dalszej diagnostyki.",
   "\nWydłużony czas dojazdu spowodowany był nieprecyzyjnym zgłoszeniem.",
   "\nLokalizacja medycznych działań ratowniczych: xx.xx.xxxx r. godz. xx:xx.",
+  "\nID sprawy Policji:",
 ];
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -1194,21 +1164,18 @@ function toggleCOForm() {
   if (isChecked) {
     const weatherResult = document.getElementById("weatherResult");
     if (weatherResult) {
-      weatherResult.click(); // otwiera menu pogodowe
+      weatherResult.click();
 
-      // daj czas na wygenerowanie elementów, potem zaznacz checkbox i zamknij menu
       setTimeout(() => {
         const pressureCheckbox = document.getElementById("pressureToggle");
         if (pressureCheckbox) {
           pressureCheckbox.checked = true;
           pressureCheckbox.dispatchEvent(new Event("change"));
         }
-
-        // ⛔️ teraz zamknij menu po chwili
         if (window.menu) {
           window.menu.style.display = "none";
         }
-      }, 150); // 150ms wystarczy
+      }, 150);
     }
 
     updateCODescription();
@@ -1232,29 +1199,125 @@ function updateCODescription() {
   const drager = document.getElementById("drager").checked;
   const ban = document.getElementById("ban").checked;
 
-  const text = 
-`\n1. Ewakuacja - ${evac ? 'przeprowadzono' : 'nie przeprowadzono'}.
-2. KPP - lokatorzy mieszkania nr ${apt} ${kpp ? 'wymagali' : 'nie wymagali'} udzielenia KPP oraz wezwania ZRM na miejsce zdarzenia.
+  const text =
+    `\n1. Ewakuacja - ${evac ? "przeprowadzono" : "nie przeprowadzono"}.
+2. KPP - lokatorzy mieszkania nr ${apt} ${kpp ? "wymagali" : "nie wymagali"} udzielenia KPP oraz wezwania ZRM na miejsce zdarzenia.
 3. Pomiary w miejscu zdarzenia - wykonano pomiary na obecność tlenku węgla w mieszkaniu nr ${apt} - I pomiar wynik 0 ppm., po przewietrzeniu mieszkania - wynik wskazywał 0 ppm.
-4. Użyty sprzęt - sprzęt pomiarowy ${drager ? 'Drager X-am 2500' : 'MSA Altair 4X'} oraz sprzęt ochrony dróg oddechowych.
+4. Użyty sprzęt - sprzęt pomiarowy ${drager ? "Drager X-am 2500" : "MSA Altair 4XR"} oraz sprzęt ochrony dróg oddechowych.
 5. Pomiary w pozostałej części obiektu, sprawdzono mieszkania w tym samym pionie: mieszkania nr: ${flats} przy włączonym piecyku - wynik 0 ppm, po przewietrzeniu mieszkań - wynik 0 ppm. Nie dokonano pomiarów w mieszkaniach nr: ${unflats} - brak dostępu do mieszkań.
-6. Ewentualny zakaz użytkowania - ${ban ? 'wydano' : 'nie wydano. Zalecono wietrzenie mieszkania.'}
+6. Ewentualny zakaz użytkowania - ${ban ? "wydano" : "nie wydano. Zalecono wietrzenie mieszkania."}
 7. Sposób przekazania miejsca zdarzenia - miejsce zdarzenia przekazano lokatorce mieszkania nr ${apt}.`;
 
   document.getElementById("coOutput").textContent = text;
 }
-  
-function degToDirection(deg) {
-    const dirs = ["północny", "północno-wschodni", "wschodni", "południowo-wschodni", "południowy", "południowo-zachodni", "zachodni", "północno-zachodni"];
-    return dirs[Math.round(deg / 45) % 8];
+function toggleDispatchForm() {
+  const dispatchToggle = document.getElementById("dispatchToggle");
+  const dispatchFormContainer = document.getElementById("dispatchFormContainer");
+
+  if (dispatchToggle.checked) {
+    dispatchFormContainer.style.display = "block";
+    setDispatchTimeNow();
+    generateDispatchText();
+  } else {
+    dispatchFormContainer.style.display = "none";
+    const output = document.getElementById("dispatchOutput");
+    if (output) output.textContent = "";
   }
-    function initializeTab3() {
-      addResponderLine();
-      addActionLine();
-      setupInteractiveHandlers();
-      addPoziomLine(false);
-      addHydrantLine();
-      loadHydrantJsonAutomatically();
-      fetchWeatherFromIMGW();
-      addAdditionalLine(false);
-    }
+}
+
+function getLocalDatetimeString() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
+function setDispatchTimeNow() {
+  const dispatchTimeInput = document.getElementById("dispatchTime");
+  if (dispatchTimeInput && !dispatchTimeInput.value) {
+    dispatchTimeInput.value = getLocalDatetimeString();
+  }
+}
+
+function formatReportSuffix() {
+  const input = document.getElementById("meldunekSuffix");
+  if (!input) return;
+
+  let val = input.value.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+
+  if (val.length > 1) {
+    val = val.slice(0, 1) + "-" + val.slice(1, 5);
+  }
+
+  input.value = val.slice(0, 6);
+}
+
+function generateDispatchText() {
+  const dispatchToggle = document.getElementById("dispatchToggle");
+  const output = document.getElementById("dispatchOutput");
+
+  if (!dispatchToggle.checked) {
+    if (output) output.textContent = "";
+    return;
+  }
+
+  const timeInput = document.getElementById("dispatchTime")?.value;
+  const vehicle = document.getElementById("dispatchVehicle")?.value;
+  const reportPrefix = document.getElementById("meldunekPrefix")?.value.trim();
+  const reportSuffix = document.getElementById("meldunekSuffix")?.value.trim();
+
+  if (!timeInput || !vehicle || !output) {
+    if (output) output.textContent = "";
+    return;
+  }
+
+  const dateObj = new Date(timeInput);
+  const formatted =
+    ("0" + dateObj.getDate()).slice(-2) + "-" +
+    ("0" + (dateObj.getMonth() + 1)).slice(-2) + "-" +
+    dateObj.getFullYear() + " " +
+    ("0" + dateObj.getHours()).slice(-2) + ":" +
+    ("0" + dateObj.getMinutes()).slice(-2);
+
+  const reportText = reportSuffix ? ` nr meldunku ${reportPrefix}${reportSuffix}.` : "";
+
+  output.textContent = `Siły i środki przedysponowane do innych zdarzeń:\n-${formatted}: ${vehicle}${reportText}`;
+}
+function setupDispatchListeners() {
+  setDispatchTimeNow();
+
+  const dispatchTimeInput = document.getElementById("dispatchTime");
+  const dispatchVehicle = document.getElementById("dispatchVehicle");
+  const meldunekPrefix = document.getElementById("meldunekPrefix");
+  const meldunekSuffix = document.getElementById("meldunekSuffix");
+
+  dispatchTimeInput?.addEventListener("input", generateDispatchText);
+  dispatchVehicle?.addEventListener("change", generateDispatchText);
+  meldunekPrefix?.addEventListener("input", generateDispatchText);
+  meldunekSuffix?.addEventListener("input", () => {
+    formatReportSuffix();
+    generateDispatchText();
+  });
+
+  generateDispatchText();
+}
+
+function degToDirection(deg) {
+  const dirs = ["północny", "północno-wschodni", "wschodni", "południowo-wschodni", "południowy", "południowo-zachodni", "zachodni", "północno-zachodni"];
+  return dirs[Math.round(deg / 45) % 8];
+}
+
+function initializeTab3() {
+  addResponderLine();
+  addActionLine();
+  setupInteractiveHandlers();
+  addPoziomLine(false);
+  addHydrantLine();
+  loadHydrantJsonAutomatically();
+  fetchWeatherFromIMGW();
+  addAdditionalLine(false);
+  setupDispatchListeners();
+}
