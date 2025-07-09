@@ -250,13 +250,14 @@ function setupInteractiveHandlers() {
 
       else if (el.id === "przekazanie") {
         const options = [
+          "Miejsce zdarzenia przekazano o godz. __ p. _____ z zaleceniem _________",
           "Miejsce zdarzenia wraz z zaleceniem ___________ przekazano.",
           "Miejsca zdarzenia nie przekazano ze względu na fakt, iż służbą wiodącą była Policja, o czym poinformowano SKKM.",
           "Miejsca zdarzenia nie przekazano ze względu na brak podjętych działań ratowniczych, o czym poinformowano SKKM.",
-          "Miejsca zdarzenia nie przekazano ze względu na brak właściciela obiektu, o czym poinformowano SKKM.",
           "Miejsca zdarzenia nie przekazano ze względu na charakter zdarzenia i brak szkód, o czym poinformowano SKKM.",
           "Miejsca zdarzenia nie przekazano ze względu na brak właściciela obiektu na miejscu zdarzenia, o czym poinformowano SKKM.",
-          "Miejsca zdarzenia nie przekazano ze względu na mnogość zdarzeń, o czym poinformowano SKKM."
+          "Miejsca zdarzenia nie przekazano ze względu na mnogość zdarzeń, o czym poinformowano SKKM.",
+          "Miejsce zdarzenia bez zaleceń przekazano ___ o godz. _  "
         ];
 
         options.forEach(opt => {
@@ -977,8 +978,8 @@ function kopiujZawartosc() {
   const selection = window.getSelection();
   const range = document.createRange();
 
-  selection.removeAllRanges(); 
-  range.selectNodeContents(box); 
+  selection.removeAllRanges();
+  range.selectNodeContents(box);
   selection.addRange(range);
 
   try {
@@ -990,7 +991,7 @@ function kopiujZawartosc() {
     console.error("Błąd kopiowania:", err);
   }
 
-  selection.removeAllRanges(); 
+  selection.removeAllRanges();
 }
 
 function kopiujsluzby() {
@@ -1104,16 +1105,24 @@ function addAdditionalLine(isDuplicate = false) {
     ➕ Dodatkowe zdania
   </span>
   <div class="additional-text"></div>
-  <button 
-    class="delete-btn" 
-    onclick="this.parentElement.remove()" 
-    contenteditable="false" 
-    draggable="false" 
-    unselectable="on" 
-    style="user-select: none; -webkit-user-select: none;"
-  >
-    🗑️
-  </button>
+ <button 
+  class="delete-btn" 
+  onclick="
+    this.parentElement.remove();
+    const container = document.getElementById('additionalContainer');
+    const checkbox = document.getElementById('additionalToggle');
+    if (container.children.length === 0) {
+      checkbox.checked = false;
+      container.style.display = 'none';
+    }
+  "
+  contenteditable="false" 
+  draggable="false" 
+  unselectable="on" 
+  style="user-select: none; -webkit-user-select: none;"
+>
+  🗑️
+</button>
 <label 
   style="margin-left:10px;" 
   contenteditable="false" 
@@ -1136,7 +1145,7 @@ function addAdditionalLine(isDuplicate = false) {
 `;
 
   container.appendChild(line);
-  setupInteractiveHandlers(); 
+  setupInteractiveHandlers();
 }
 
 window.additionalOptions = [
@@ -1175,7 +1184,7 @@ function toggleCOForm() {
         if (window.menu) {
           window.menu.style.display = "none";
         }
-      }, 150); 
+      }, 150);
     }
 
     updateCODescription();
@@ -1237,7 +1246,7 @@ function getLocalDatetimeString() {
 
 function setDispatchTimeNow() {
   const dispatchTimeInput = document.getElementById("dispatchTime");
-  if (dispatchTimeInput && !dispatchTimeInput.value) { 
+  if (dispatchTimeInput && !dispatchTimeInput.value) {
     dispatchTimeInput.value = getLocalDatetimeString();
   }
 }
@@ -1311,14 +1320,16 @@ function degToDirection(deg) {
 }
 
 function toggleAdditionalForm() {
-  const container = document.getElementById("additionalContainer");
   const checkbox = document.getElementById("additionalToggle");
-  if (!container || !checkbox) return;
+  const container = document.getElementById("additionalContainer");
 
   if (checkbox.checked) {
-    container.style.display = "block"; 
+    if (container.children.length === 0) {
+      addAdditionalLine();
+    }
+    container.style.display = "block";
   } else {
-    container.style.display = "none";   
+    container.style.display = "none";
   }
 }
 
