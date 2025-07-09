@@ -10,19 +10,19 @@
 
 <body>
   <div class="form-check mb-3">
-  <label for="coCheckbox" class="copy-button co-toggle-label">
-    <input type="checkbox" id="coCheckbox" onchange="toggleCOForm()" style="display:none;">
-    Tlenek węgla
-  </label>
-  <label for="dispatchToggle" class="copy-button co-toggle-label">
-    <input type="checkbox" id="dispatchToggle" onchange="toggleDispatchForm()" style="display:none;">
-    Siły i środki przedysponowane
-  </label>
-  <label for="additionalToggle" class="copy-button co-toggle-label">
-    <input type="checkbox" id="additionalToggle" onchange="toggleAdditionalForm()" style="display:none;">
-    Dodatkowe zdania
-  </label>
-</div>
+    <label for="coCheckbox" class="copy-button co-toggle-label">
+      <input type="checkbox" id="coCheckbox" onchange="toggleCOForm()" style="display:none;">
+      Tlenek węgla
+    </label>
+    <label for="dispatchToggle" class="copy-button co-toggle-label">
+      <input type="checkbox" id="dispatchToggle" onchange="toggleDispatchForm()" style="display:none;">
+      Siły i środki przedysponowane
+    </label>
+    <label for="additionalToggle" class="copy-button co-toggle-label">
+      <input type="checkbox" id="additionalToggle" onchange="toggleAdditionalForm()" style="display:none;">
+      Dodatkowe zdania
+    </label>
+  </div>
   <div id="dispatchFormContainer" style="display: none;">
     <div id="dispatchForm">
       <h3>Siły i środki przedysponowane</h3>
@@ -37,8 +37,8 @@
             <option value="GBA -Rt 2/16 MERCEDES, SF 301-21">301-21</option>
             <option value="GBA -Rt 2,5/25 RENAULT, SF 301-22">301-22</option>
             <option value="GCBA 8/50 RENAULT, SF 301-27">301-27</option>
-            <option value="SCD 40 IVECO MAGIRUS">301-51</option>
-            <option value="SLRR FORD RANGER I">301-90</option>
+            <option value="SCD 40 IVECO MAGIRUS, SF 301-51">301-51</option>
+            <option value="SLRR FORD RANGER I, SF301-90">301-90</option>
           </optgroup>
           <optgroup label="JRG 2">
             <option value="GBA -Rt 2,5/25 RENAULT, SF 302-21">302-21</option>
@@ -81,12 +81,17 @@
     <div class="d-flex gap-2">
       <input type="text" id="aptNumber" placeholder="Nr mieszkania" oninput="updateCODescription()">
       <input type="text" id="checkedFlats" placeholder="Sprawdzone mieszkania" oninput="updateCODescription()">
+      <select id="deviceSelect" onchange="updateCODescription()">
+        <option value="drager">Drager X-am 2500</option>
+        <option value="msa">MSA Altair 4XR</option>
+        <option value="tetra">Tetra 3</option>
+        <option value="microclip">MicroClip</option>
+      </select>
       <input type="text" id="uncheckedFlats" placeholder="Brak pomiaru - numery" oninput="updateCODescription()">
     </div>
     <div style="margin-top: 0.5em;">
       <label><input type="checkbox" id="evacuation" onchange="updateCODescription()"> Ewakuacja</label>
       <label><input type="checkbox" id="kpp" onchange="updateCODescription()"> KPP</label>
-      <label><input type="checkbox" id="drager" onchange="updateCODescription()"> Drager</label>
       <label><input type="checkbox" id="ban" onchange="updateCODescription()"> Zakaz</label>
     </div>
   </div>

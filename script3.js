@@ -1,4 +1,5 @@
 window.hydrantJsonData = window.hydrantJsonData || [];
+window.pressureToggleState = false;
 function loadHydrantJsonAutomatically() {
   fetch("hydrantykato.json")
     .then(response => response.json())
@@ -354,7 +355,7 @@ function setupInteractiveHandlers() {
           event.stopPropagation();
           el.dataset.korzystał = checkbox.checked ? "tak" : "nie";
           el.textContent = checkbox.checked
-            ? "KDR korzystał z praw określonych w Rozporządzeniu Rady Ministrów z dnia 4 lipca 1992 r. w sprawie zakresu i trybu korzystania z praw kierującego działaniem ratowniczym:"
+            ? "Zgodnie z Rozporządzeniem Rady Ministrów z dnia 4 lipca 1992 r. w sprawie zakresu i trybu korzystania z praw przez kierującego działaniem ratowniczym KDR skorzystał z uprawnienia do zarządzenia:"
             : "KDR nie korzystał z praw określonych w Rozporządzeniu Rady Ministrów z dnia 4 lipca 1992 r. w sprawie zakresu i trybu korzystania z praw kierującego działaniem ratowniczym.";
           const prawaContainer = el.parentElement.querySelector(".kdr-rights-container");
 
@@ -723,7 +724,11 @@ function setupInteractiveHandlers() {
         });
         const pressureToggle = document.getElementById("pressureToggle");
         if (pressureToggle) {
-          pressureToggle.addEventListener("change", updateLive);
+          pressureToggle.checked = window.pressureToggleState || false;
+          pressureToggle.addEventListener("change", (e) => {
+            window.pressureToggleState = e.target.checked;
+            updateLive();
+          });
         }
 
         const pressureVal = document.getElementById("pressureVal");
@@ -1195,8 +1200,11 @@ function toggleCOForm() {
 
 function updateCODescription() {
   const checkbox = document.getElementById("coCheckbox");
+  const output = document.getElementById("coOutput");
+
   if (!checkbox.checked) {
-    document.getElementById("coOutput").textContent = "";
+    output.textContent = "";
+    output.style.display = "none";
     return;
   }
 
@@ -1205,34 +1213,40 @@ function updateCODescription() {
   const unflats = document.getElementById("uncheckedFlats").value || "nie dotyczy";
   const evac = document.getElementById("evacuation").checked;
   const kpp = document.getElementById("kpp").checked;
-  const drager = document.getElementById("drager").checked;
   const ban = document.getElementById("ban").checked;
 
+  const deviceSelect = document.getElementById("deviceSelect");
+  const deviceValue = deviceSelect ? deviceSelect.value : "msa";
+
+  const devices = {
+    drager: "Drager X-am 2500",
+    msa: "MSA Altair 4XR",
+    tetra: "Tetra 3",
+    microclip: "MicroClip"
+  };
+
+  const selectedDeviceName = devices[deviceValue] || "MSA Altair 4XR";
   const text =
     `\n1. Ewakuacja - ${evac ? "przeprowadzono" : "nie przeprowadzono"}.
-2. KPP - lokatorzy mieszkania nr ${apt} ${kpp ? "wymagali" : "nie wymagali"} udzielenia KPP oraz wezwania ZRM na miejsce zdarzenia.
-3. Pomiary w miejscu zdarzenia - wykonano pomiary na obecność tlenku węgla w mieszkaniu nr ${apt} - I pomiar wynik 0 ppm., po przewietrzeniu mieszkania - wynik wskazywał 0 ppm.
-4. Użyty sprzęt - sprzęt pomiarowy ${drager ? "Drager X-am 2500" : "MSA Altair 4XR"} oraz sprzęt ochrony dróg oddechowych.
-5. Pomiary w pozostałej części obiektu, sprawdzono mieszkania w tym samym pionie: mieszkania nr: ${flats} przy włączonym piecyku - wynik 0 ppm, po przewietrzeniu mieszkań - wynik 0 ppm. Nie dokonano pomiarów w mieszkaniach nr: ${unflats} - brak dostępu do mieszkań.
-6. Ewentualny zakaz użytkowania - ${ban ? "wydano" : "nie wydano. Zalecono wietrzenie mieszkania."}
-7. Sposób przekazania miejsca zdarzenia - miejsce zdarzenia przekazano lokatorce mieszkania nr ${apt}.`;
+    2. KPP - lokatorzy mieszkania nr ${apt} ${kpp ? "wymagali" : "nie wymagali"} udzielenia KPP oraz wezwania ZRM na miejsce zdarzenia.
+    3. Pomiary w miejscu zdarzenia - wykonano pomiary na obecność tlenku węgla w mieszkaniu nr ${apt} - I pomiar wynik 0 ppm., po przewietrzeniu mieszkania - wynik wskazywał 0 ppm.
+    4. Użyty sprzęt - sprzęt pomiarowy ${selectedDeviceName} oraz sprzęt ochrony dróg oddechowych.
+    5. Pomiary w pozostałej części obiektu, sprawdzono mieszkania w tym samym pionie: mieszkania nr: ${flats} przy włączonym piecyku - wynik 0 ppm, po przewietrzeniu mieszkań - wynik 0 ppm. Nie dokonano pomiarów w mieszkaniach nr: ${unflats} - brak dostępu do mieszkań.
+    6. Ewentualny zakaz użytkowania - ${ban ? "wydano" : "nie wydano. Zalecono wietrzenie mieszkania."}
+    7. Sposób przekazania miejsca zdarzenia - miejsce zdarzenia przekazano lokatorce mieszkania nr ${apt}.`;
 
-  document.getElementById("coOutput").textContent = text;
+  output.textContent = text;
+  output.style.display = "block";
 }
-function toggleDispatchForm() {
-  const dispatchToggle = document.getElementById("dispatchToggle");
-  const dispatchFormContainer = document.getElementById("dispatchFormContainer");
 
-  if (dispatchToggle.checked) {
-    dispatchFormContainer.style.display = "block";
-    setDispatchTimeNow();
-    generateDispatchText();
-  } else {
-    dispatchFormContainer.style.display = "none";
-    const output = document.getElementById("dispatchOutput");
-    if (output) output.textContent = "";
-  }
-}
+document.addEventListener("DOMContentLoaded", () => {
+  ["coCheckbox", "deviceSelect", "aptNumber", "checkedFlats", "uncheckedFlats", "evacuation", "kpp", "ban"].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const eventType = (el.type === "checkbox" || el.tagName === "SELECT") ? "change" : "input";
+    el.addEventListener(eventType, updateCODescription);
+  });
+});
 
 function getLocalDatetimeString() {
   const now = new Date();
@@ -1333,6 +1347,40 @@ function toggleAdditionalForm() {
   }
 }
 
+function createDeviceSelect() {
+  const container = document.getElementById("coForm");
+  if (!container) return;
+
+  // Usuń stary select, jeśli istnieje
+  const oldSelect = document.getElementById("deviceSelect");
+  if (oldSelect) oldSelect.remove();
+
+  const label = document.createElement("label");
+  label.setAttribute("for", "deviceSelect");
+  label.textContent = "Sprzęt pomiarowy: ";
+
+  const select = document.createElement("select");
+  select.id = "deviceSelect";
+
+  const devices = [
+    { value: "drager", text: "Drager X-am 2500" },
+    { value: "msa", text: "MSA Altair 4XR" },
+    { value: "tetra", text: "Tetra 3" },
+    { value: "microclip", text: "MicroClip" },
+  ];
+
+  devices.forEach(device => {
+    const option = document.createElement("option");
+    option.value = device.value;
+    option.textContent = device.text;
+    select.appendChild(option);
+  });
+
+  select.addEventListener("change", updateCODescription);
+  container.appendChild(label);
+  container.appendChild(select);
+}
+
 function initializeTab3() {
   addResponderLine();
   addActionLine();
@@ -1344,4 +1392,5 @@ function initializeTab3() {
   addAdditionalLine(false);
   setupDispatchListeners();
   toggleAdditionalForm();
+  createDeviceSelect();
 }
