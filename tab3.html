@@ -10,15 +10,19 @@
 
 <body>
   <div class="form-check mb-3">
-    <label for="coCheckbox" class="copy-button co-toggle-label">
-      <input type="checkbox" id="coCheckbox" onchange="toggleCOForm()" style="display:none;">
-      Tlenek węgla
-    </label>
-    <label for="dispatchToggle" class="copy-button co-toggle-label">
-      <input type="checkbox" id="dispatchToggle" onchange="toggleDispatchForm()" style="display:none;">
-      Siły i środki przedysponowane
-    </label>
-  </div>
+  <label for="coCheckbox" class="copy-button co-toggle-label">
+    <input type="checkbox" id="coCheckbox" onchange="toggleCOForm()" style="display:none;">
+    Tlenek węgla
+  </label>
+  <label for="dispatchToggle" class="copy-button co-toggle-label">
+    <input type="checkbox" id="dispatchToggle" onchange="toggleDispatchForm()" style="display:none;">
+    Siły i środki przedysponowane
+  </label>
+  <label for="additionalToggle" class="copy-button co-toggle-label">
+    <input type="checkbox" id="additionalToggle" onchange="toggleAdditionalForm()" style="display:none;">
+    Dodatkowe zdania
+  </label>
+</div>
   <div id="dispatchFormContainer" style="display: none;">
     <div id="dispatchForm">
       <h3>Siły i środki przedysponowane</h3>
@@ -29,33 +33,41 @@
       <div class="form-group">
         <label for="dispatchVehicle">Wybierz pojazd:</label><br />
         <select id="dispatchVehicle">
-          <option value="GBA -Rt 2/16 MERCEDES, SF 301-21">301-21</option>
-          <option value="GBA -Rt 2,5/25 RENAULT, SF 301-22">301-22</option>
-          <option value="GCBA 8/50 RENAULT, SF 301-27">301-27</option>
-          <option value="SCD 40 IVECO MAGIRUS">301-51</option>
-          <option value="SLRR FORD RANGER I">301-90</option>
-          <option value="GBA -Rt 2,5/25 RENAULT, SF 302-21">302-21</option>
-          <option value="GCBA 5/38/4,6 SCANIA, SF 302-25">302-25</option>
-          <option value="SCRt SCANIA, SF 302-43">302-43</option>
-          <option value="SD 30 IVECO, SF 302-51">302-51</option>
-          <option value="SRRChem SCANIA_Mobilab, SF 302-61">302-61</option>
-          <option value="SLRR FORD RANGER II DRON, SF 302-90">302-90</option>
-          <option value="GBA -Rt 2,7/25 RENAULT, SF 303-21">303-21</option>
-          <option value="GCBA 5/32/4,8 SCANIA, SF 303-25">303-25</option>
-          <option value="SLRR REXTON, SF 303-90">303-90</option>
-          <option value="GLBM 0,2/1 Ford Transit, SF 329-12">329-12 OSP KOSTUCHNA FORD</option>
-          <option value="SLRR  Isuzu D-MAX, SF 329-13">329-13 OSP KOSTUCHNA Isuzu</option>
-          <option value="GCBA 4,2/37,1/4,3 VOLVO, SF 329-14">329-14 OSP KOSTUCHNA FMX</option>
-          <option value="GBA 2/24/2,5 Renault, SF 329-21">329-21 OSP Dąbrówka Mała Renault</option>
-          <option value="SLKw BUS RENAULT MASTER, SF 329-22">329-22 OSP Dąbrówka Mała Renault Bus</option>
-          <option value="GCBA 3/16/1,6 Scania, SF 329-24">329-24 OSP Dąbrówka Mała Scania</option>
-          <option value="GBA 3/16/4,3 Renault, SF 329-31">329-31 OSP Podlesie Renault</option>
-          <option value="GLBM 0,3 /05 Renault Master, SF 329-32">329-21 OSP Podlesie Renault</option>
-          <option value="GBA 2/24/2,5 RENAULT, SF 329-41">329-41 OSP Szopienice Renault</option>
-          <option value="GCBA 4,5/29,7/4,7 MAN  TGM, SF 329-42">329-42 OSP Szopienice MAN</option>
-          <option value="GCBA 5,1/32/2,5 SCANIA, SF 329-51">329-51 OSP Zarzecze Scania</option>
-          <option value="GLBM 0,2/1 Ford Transit, SF 329-52">329-52 OSP Zarzecze Ford</option>
-          <option value="SLOp NISSAN, SF 329-53">329-53 OSP Zarzecze Nissan</option>
+          <optgroup label="JRG 1">
+            <option value="GBA -Rt 2/16 MERCEDES, SF 301-21">301-21</option>
+            <option value="GBA -Rt 2,5/25 RENAULT, SF 301-22">301-22</option>
+            <option value="GCBA 8/50 RENAULT, SF 301-27">301-27</option>
+            <option value="SCD 40 IVECO MAGIRUS">301-51</option>
+            <option value="SLRR FORD RANGER I">301-90</option>
+          </optgroup>
+          <optgroup label="JRG 2">
+            <option value="GBA -Rt 2,5/25 RENAULT, SF 302-21">302-21</option>
+            <option value="GCBA 5/38/4,6 SCANIA, SF 302-25">302-25</option>
+            <option value="SCRt SCANIA, SF 302-43">302-43</option>
+            <option value="SD 30 IVECO, SF 302-51">302-51</option>
+            <option value="SRRChem SCANIA_Mobilab, SF 302-61">302-61</option>
+            <option value="SLRR FORD RANGER II DRON, SF 302-90">302-90</option>
+          </optgroup>
+          <optgroup label="JRG 3">
+            <option value="GBA -Rt 2,7/25 RENAULT, SF 303-21">303-21</option>
+            <option value="GCBA 5/32/4,8 SCANIA, SF 303-25">303-25</option>
+            <option value="SLRR REXTON, SF 303-90">303-90</option>
+          </optgroup>
+          <optgroup label="OSP">
+            <option value="GLBM 0,2/1 Ford Transit, SF 329-12">329-12 OSP KOSTUCHNA FORD</option>
+            <option value="SLRR  Isuzu D-MAX, SF 329-13">329-13 OSP KOSTUCHNA Isuzu</option>
+            <option value="GCBA 4,2/37,1/4,3 VOLVO, SF 329-14">329-14 OSP KOSTUCHNA FMX</option>
+            <option value="GBA 2/24/2,5 Renault, SF 329-21">329-21 OSP Dąbrówka Mała Renault</option>
+            <option value="SLKw BUS RENAULT MASTER, SF 329-22">329-22 OSP Dąbrówka Mała Renault Bus</option>
+            <option value="GCBA 3/16/1,6 Scania, SF 329-24">329-24 OSP Dąbrówka Mała Scania</option>
+            <option value="GBA 3/16/4,3 Renault, SF 329-31">329-31 OSP Podlesie Renault</option>
+            <option value="GLBM 0,3 /05 Renault Master, SF 329-32">329-21 OSP Podlesie Renault</option>
+            <option value="GBA 2/24/2,5 RENAULT, SF 329-41">329-41 OSP Szopienice Renault</option>
+            <option value="GCBA 4,5/29,7/4,7 MAN  TGM, SF 329-42">329-42 OSP Szopienice MAN</option>
+            <option value="GCBA 5,1/32/2,5 SCANIA, SF 329-51">329-51 OSP Zarzecze Scania</option>
+            <option value="GLBM 0,2/1 Ford Transit, SF 329-52">329-52 OSP Zarzecze Ford</option>
+            <option value="SLOp NISSAN, SF 329-53">329-53 OSP Zarzecze Nissan</option>
+          </optgroup>
         </select>
       </div>
       <div class="form-group">

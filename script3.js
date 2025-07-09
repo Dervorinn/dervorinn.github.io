@@ -977,8 +977,8 @@ function kopiujZawartosc() {
   const selection = window.getSelection();
   const range = document.createRange();
 
-  selection.removeAllRanges();
-  range.selectNodeContents(box);
+  selection.removeAllRanges(); 
+  range.selectNodeContents(box); 
   selection.addRange(range);
 
   try {
@@ -990,7 +990,7 @@ function kopiujZawartosc() {
     console.error("Błąd kopiowania:", err);
   }
 
-  selection.removeAllRanges();
+  selection.removeAllRanges(); 
 }
 
 function kopiujsluzby() {
@@ -1136,7 +1136,7 @@ function addAdditionalLine(isDuplicate = false) {
 `;
 
   container.appendChild(line);
-  setupInteractiveHandlers();
+  setupInteractiveHandlers(); 
 }
 
 window.additionalOptions = [
@@ -1175,7 +1175,7 @@ function toggleCOForm() {
         if (window.menu) {
           window.menu.style.display = "none";
         }
-      }, 150);
+      }, 150); 
     }
 
     updateCODescription();
@@ -1237,7 +1237,7 @@ function getLocalDatetimeString() {
 
 function setDispatchTimeNow() {
   const dispatchTimeInput = document.getElementById("dispatchTime");
-  if (dispatchTimeInput && !dispatchTimeInput.value) {
+  if (dispatchTimeInput && !dispatchTimeInput.value) { 
     dispatchTimeInput.value = getLocalDatetimeString();
   }
 }
@@ -1310,6 +1310,18 @@ function degToDirection(deg) {
   return dirs[Math.round(deg / 45) % 8];
 }
 
+function toggleAdditionalForm() {
+  const container = document.getElementById("additionalContainer");
+  const checkbox = document.getElementById("additionalToggle");
+  if (!container || !checkbox) return;
+
+  if (checkbox.checked) {
+    container.style.display = "block"; 
+  } else {
+    container.style.display = "none";   
+  }
+}
+
 function initializeTab3() {
   addResponderLine();
   addActionLine();
@@ -1320,4 +1332,5 @@ function initializeTab3() {
   fetchWeatherFromIMGW();
   addAdditionalLine(false);
   setupDispatchListeners();
+  toggleAdditionalForm();
 }
