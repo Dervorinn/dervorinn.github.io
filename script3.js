@@ -47,10 +47,10 @@ window.checkboxOptions = window.checkboxOptions || [
 ];
 
 window.actionOptions = window.actionOptions || [
-  "zabezpieczeniu miejsca zdarzenia",
-  "podaniu jednego prądu wody w natarciu",
-  "sprawdzeniu pogorzeliska przy użyciu kamery termowizyjnej Flir - brak wzrostu temperatury względem otoczenia",
-  "złożeniu pociętego drewna na terenie zielonym w miejscu bezpiecznym. "
+  "zabezpieczeniu miejsca zdarzenia.",
+  "podaniu jednego prądu wody w natarciu.",
+  "sprawdzeniu pogorzeliska przy użyciu kamery termowizyjnej Flir - brak wzrostu temperatury względem otoczenia.",
+  "złożeniu pociętego drewna na terenie zielonym w miejscu bezpiecznym."
 ];
 
 window.menu = document.getElementById("menu");
@@ -59,10 +59,28 @@ window.myślniki = document.getElementById("myślniki");
 function addResponderLine() {
   const line = document.createElement("div");
   line.className = "responder-line";
+
   line.innerHTML = `
     <span class="interactive responder-label">-</span>
     <span class="responder-text" data-selected="[]"></span>
+    <button 
+      class="delete-btn" 
+      title="Usuń linię" 
+      contenteditable="false" 
+      draggable="false" 
+      unselectable="on"
+      aria-hidden="true"
+      style="margin-left:10px; user-select: none; -webkit-user-select: none; -moz-user-select: none;"
+    >
+      🗑️
+    </button>
   `;
+
+  line.querySelector(".delete-btn").addEventListener("click", () => {
+    line.remove();
+    updateAllResponderPunctuation();
+  });
+
   window.myślniki.appendChild(line);
   setupInteractiveHandlers();
   updateAllResponderPunctuation();
@@ -71,10 +89,28 @@ function addResponderLine() {
 function addActionLine() {
   const line = document.createElement("div");
   line.className = "responder-line";
+
   line.innerHTML = `
     <span class="interactive action-label">-</span>
     <span class="action-text" data-custom=""></span>
+    <button 
+      class="delete-btn" 
+      title="Usuń linię" 
+      contenteditable="false" 
+      draggable="false" 
+      unselectable="on"
+      aria-hidden="true"
+      style="margin-left:10px; user-select: none; -webkit-user-select: none; -moz-user-select: none;"
+    >
+      🗑️
+    </button>
   `;
+
+  line.querySelector(".delete-btn").addEventListener("click", () => {
+    line.remove();
+    updateAllActionPunctuation();
+  });
+
   document.getElementById("dzialaniaContainer").appendChild(line);
   setupInteractiveHandlers();
   updateAllActionPunctuation();
@@ -94,11 +130,7 @@ function updateRespondersText(textSpan, selected) {
 
   const allLines = [...window.window.myślniki.querySelectorAll(".responder-line")];
   const lastLine = allLines[allLines.length - 1];
-  if (text && textSpan.closest(".responder-line") === lastLine) {
-    addResponderLine();
-  } else {
-    updateAllResponderPunctuation();
-  }
+  updateAllResponderPunctuation();
 }
 
 function updateAllResponderPunctuation() {
@@ -119,11 +151,7 @@ function updateActionText(textSpan, text) {
 
     const allLines = [...document.querySelectorAll("#dzialaniaContainer .responder-line")];
     const lastLine = allLines[allLines.length - 1];
-    if (textSpan.closest(".responder-line") === lastLine) {
-      addActionLine();
-    } else {
-      updateAllActionPunctuation();
-    }
+    updateAllActionPunctuation();
   }
 }
 
@@ -357,8 +385,8 @@ function setupInteractiveHandlers() {
           el.textContent = checkbox.checked
             ? "Zgodnie z Rozporządzeniem Rady Ministrów z dnia 4 lipca 1992 r. w sprawie zakresu i trybu korzystania z praw przez kierującego działaniem ratowniczym KDR skorzystał z uprawnienia do zarządzenia:"
             : "KDR nie korzystał z praw określonych w Rozporządzeniu Rady Ministrów z dnia 4 lipca 1992 r. w sprawie zakresu i trybu korzystania z praw kierującego działaniem ratowniczym.";
+          el.parentElement.dataset.final = "true";
           const prawaContainer = el.parentElement.querySelector(".kdr-rights-container");
-
           if (checkbox.checked) {
             if (!prawaContainer) {
               const newContainer = document.createElement("div");
@@ -830,7 +858,7 @@ function addPoziomLine(isDuplicate = false) {
     <span class="interactive poziom-label">Poziom kierowania działaniem ratowniczym – interwencyjny</span>: 
     <span class="poziom-text" data-info=""></span>
     <br>
-    <span class="kdr-text interactive" data-default="true">KDR nie korzystał z praw określonych w Rozporządzeniu Rady Ministrów z dnia 4 lipca 1992 r. w sprawie zakresu i trybu korzystania z praw kierującego działaniem ratowniczym:</span>
+    <span class="kdr-text interactive" data-default="true">KDR nie korzystał z praw określonych w Rozporządzeniu Rady Ministrów z dnia 4 lipca 1992 r. w sprawie zakresu i trybu korzystania z praw kierującego działaniem ratowniczym.</span>
   `;
 
   if (isDuplicate) {
@@ -1333,6 +1361,21 @@ function degToDirection(deg) {
   return dirs[Math.round(deg / 45) % 8];
 }
 
+function toggleDispatchForm() {
+  const dispatchToggle = document.getElementById("dispatchToggle");
+  const dispatchFormContainer = document.getElementById("dispatchFormContainer");
+
+  if (dispatchToggle.checked) {
+    dispatchFormContainer.style.display = "block";
+    setDispatchTimeNow();
+    generateDispatchText();
+  } else {
+    dispatchFormContainer.style.display = "none";
+    const output = document.getElementById("dispatchOutput");
+    if (output) output.textContent = "";
+  }
+}
+
 function toggleAdditionalForm() {
   const checkbox = document.getElementById("additionalToggle");
   const container = document.getElementById("additionalContainer");
@@ -1393,4 +1436,31 @@ function initializeTab3() {
   setupDispatchListeners();
   toggleAdditionalForm();
   createDeviceSelect();
+  const addResponderBtn = document.createElement("button");
+  addResponderBtn.textContent = "➕ Dodaj linię";
+  addResponderBtn.onclick = addResponderLine;
+  addResponderBtn.setAttribute("contenteditable", "false");
+  addResponderBtn.setAttribute("draggable", "false");
+  addResponderBtn.setAttribute("unselectable", "on");
+  addResponderBtn.setAttribute("aria-hidden", "true");
+  addResponderBtn.style.userSelect = "none";
+  addResponderBtn.style.webkitUserSelect = "none";
+  addResponderBtn.style.mozUserSelect = "none";
+  addResponderBtn.style.marginTop = "8px";
+
+  document.getElementById("myślniki").after(addResponderBtn);
+
+  const addActionBtn = document.createElement("button");
+  addActionBtn.textContent = "➕ Dodaj linię";
+  addActionBtn.onclick = addActionLine;
+  addActionBtn.setAttribute("contenteditable", "false");
+  addActionBtn.setAttribute("draggable", "false");
+  addActionBtn.setAttribute("unselectable", "on");
+  addActionBtn.setAttribute("aria-hidden", "true");
+  addActionBtn.style.userSelect = "none";
+  addActionBtn.style.webkitUserSelect = "none";
+  addActionBtn.style.mozUserSelect = "none";
+  addActionBtn.style.marginTop = "8px";
+
+  document.getElementById("dzialaniaContainer").after(addActionBtn);
 }
