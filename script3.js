@@ -504,8 +504,12 @@ function setupInteractiveHandlers() {
 
         const ulInput = document.createElement("input");
         ulInput.placeholder = "Wpisz adres...";
-        ulInput.style.display = "block";
-        ulInput.style.marginBottom = "6px";
+        ulInput.style.border = "1px solid #ccc";
+        ulInput.style.padding = "6px";
+        ulInput.style.fontSize = "14px";
+        ulInput.style.borderRadius = "4px";
+        ulInput.style.width = "100%";
+        ulInput.style.boxSizing = "border-box";
         ulInput.value = span.dataset.ul || "";
         window.menu.appendChild(ulInput);
 
@@ -606,14 +610,6 @@ function setupInteractiveHandlers() {
         datalist.id = "hydrant-ulice";
         window.menu.appendChild(datalist);
 
-        const jsonInput = document.createElement("input");
-        jsonInput.type = "file";
-        jsonInput.accept = ".json";
-        jsonInput.style.display = "block";
-        jsonInput.style.marginBottom = "6px";
-        jsonInput.addEventListener("click", ev => ev.stopPropagation());
-        window.menu.appendChild(jsonInput);
-
         const checkboxOptions = [
           {
             key: "niskaTemp",
@@ -622,6 +618,10 @@ function setupInteractiveHandlers() {
           {
             key: "wieleZdarzen",
             label: "Nie sprawdzono ze względu na mnogość zdarzeń"
+          },
+          {
+            key: "niezlokalizowano",
+            label: "W promieniu 200m nie zlokalizowano"
           }
         ];
 
@@ -943,8 +943,13 @@ function updateHydrantText(span) {
 
   const temp = span.dataset.niskaTemp === "true";
   const wieleZdarzen = span.dataset.wieleZdarzen === "true";
+  const niezlokalizowano = span.dataset.niezlokalizowano === "true";
   if (wieleZdarzen) {
     span.textContent = "Nie sprawdzono ze względu na mnogość zdarzeń.";
+    return;
+  }
+  if (niezlokalizowano) {
+    span.textContent = "W promieniu 200m nie zlokalizowano.";
     return;
   }
   if (!typ && !ozn && !ul && !stan) {
@@ -1290,7 +1295,7 @@ function generateDispatchText() {
   const output = document.getElementById("dispatchOutput");
 
   if (!dispatchToggle.checked) {
-    if (output) output.textContent = "";
+    if (output) output.innerHTML = "";
     return;
   }
 
@@ -1300,7 +1305,6 @@ function generateDispatchText() {
   const reportSuffix = document.getElementById("meldunekSuffix")?.value.trim();
 
   if (!timeInput || !vehicle || !output) {
-    if (output) output.textContent = "";
     return;
   }
 
@@ -1313,9 +1317,17 @@ function generateDispatchText() {
     ("0" + dateObj.getMinutes()).slice(-2);
 
   const reportText = reportSuffix ? ` nr meldunku ${reportPrefix}${reportSuffix}.` : "";
+  const fullText = `Siły i środki przedysponowane do innych zdarzeń:\n- ${formatted}: ${vehicle}${reportText}`;
 
-  output.textContent = `Siły i środki przedysponowane do innych zdarzeń:\n-${formatted}: ${vehicle}${reportText}`;
+  // 🔄 aktualizuj pierwszą linię, jeśli istnieje — jeśli nie, dodaj
+  const firstLine = output.querySelector(".dispatch-line");
+  if (firstLine) {
+    firstLine.textContent = fullText;
+  } else {
+    addEditableDispatchLine(fullText);
+  }
 }
+
 function setupDispatchListeners() {
   setDispatchTimeNow();
 
@@ -1443,6 +1455,70 @@ window.addEventListener("load", () => {
     enhanceCommaInput(id);
   });
 });
+
+function addEditableDispatchLine(text = "") {
+  const output = document.getElementById("dispatchOutput");
+  if (!output) return;
+
+  const lineWrapper = document.createElement("div");
+  lineWrapper.className = "dispatch-entry";
+  lineWrapper.style.marginBottom = "6px";
+
+  const editable = document.createElement("div");
+  editable.className = "dispatch-line";
+  editable.contentEditable = true;
+  editable.style.border = "1px dashed #ccc";
+  editable.style.padding = "4px";
+  editable.style.display = "inline-block";
+  editable.style.minWidth = "300px";
+  editable.style.userSelect = "text"; // tylko tekst jest zaznaczalny
+  editable.textContent = text;
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "🗑️";
+  deleteBtn.title = "Usuń";
+  Object.assign(deleteBtn.style, {
+    marginLeft: "8px",
+    userSelect: "none",
+    WebkitUserSelect: "none",
+    MozUserSelect: "none"
+  });
+  deleteBtn.setAttribute("contenteditable", "false");
+  deleteBtn.setAttribute("draggable", "false");
+  deleteBtn.setAttribute("unselectable", "on");
+  deleteBtn.onclick = () => lineWrapper.remove();
+
+  const duplicateBtn = document.createElement("button");
+  duplicateBtn.textContent = "➕";
+  duplicateBtn.title = "Powiel";
+  Object.assign(duplicateBtn.style, {
+    marginLeft: "4px",
+    userSelect: "none",
+    WebkitUserSelect: "none",
+    MozUserSelect: "none"
+  });
+  duplicateBtn.setAttribute("contenteditable", "false");
+  duplicateBtn.setAttribute("draggable", "false");
+  duplicateBtn.setAttribute("unselectable", "on");
+  duplicateBtn.onclick = () => {
+    addEditableDispatchLine(editable.textContent.trim());
+  };
+
+  lineWrapper.appendChild(editable);
+  lineWrapper.appendChild(deleteBtn);
+  lineWrapper.appendChild(duplicateBtn);
+
+  output.appendChild(lineWrapper);
+}
+
+function duplicateLastDispatch() {
+  const lines = document.querySelectorAll("#dispatchOutput .dispatch-line");
+  if (!lines.length) return;
+
+  const last = lines[lines.length - 1];
+  const text = last.textContent.trim();
+  addEditableDispatchLine(text);
+}
 
 function initializeTab3() {
   addResponderLine();
