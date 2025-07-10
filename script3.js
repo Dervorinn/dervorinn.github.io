@@ -603,6 +603,28 @@ function setupInteractiveHandlers() {
         window.menu.appendChild(input);
       }
 
+      else if (["interactiveText1", "interactiveText2"].includes(el.id)) {
+        const options = window.optionsMap?.[el.id] || [];
+        options.forEach(opt => {
+          const li = document.createElement("li");
+          li.textContent = opt + ":";
+          li.onclick = () => {
+            el.textContent = opt + ":";
+            window.menu.style.display = "none";
+          };
+          window.menu.appendChild(li);
+        });
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = "(Zamienia nagłówek)";
+        input.addEventListener("click", ev => ev.stopPropagation());
+        input.addEventListener("input", () => {
+          el.textContent = input.value.trim() + ":";
+        });
+        window.menu.appendChild(input);
+      }
+
       else if (el.id === "przekazanie") {
         const options = [
           "Miejsce zdarzenia przekazano o godz. __ p. _____ z zaleceniem _________",
