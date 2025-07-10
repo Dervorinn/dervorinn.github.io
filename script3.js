@@ -253,8 +253,8 @@ function renderCheckboxMenu(textSpan) {
 
   const sytuacjaSentences = [
     {
-      text: "Sytuacja zgodna ze zgłoszeniem.",
-      selected: ["Sytuacja zgodna z zgłoszeniem"]
+      text: "sytuacja zgodna ze zgłoszeniem",
+      selected: ["sytuacja zgodna z zgłoszeniem"]
     },
     { text: "brak innych służb na miejscu",
       selected: ["Brak innych służb"]
@@ -1492,8 +1492,13 @@ window.additionalGroupedOptions = {
     "Dokumentacji fotograficznej z miejsca zdarzenia nie sporządzono ze względu na fakt, iż usunięty konar nie przekraczał 30% korony drzewa.",
     "Wykonano dokumentację fotograficzną."
   ],
-  "🚑 Działania ZRM": [
-    "Przybyły na miejsce ZRM po przebadaniu osoby poszkodowanej podjął decyzję o konieczności przetransportowania osoby do szpitala xxxxxxx celem dalszej diagnostyki."
+  "🚑 Medyczne": [
+    "Przybyły na miejsce ZRM po przebadaniu osoby poszkodowanej podjął decyzję o konieczności przetransportowania osoby do szpitala xxxxxxx celem dalszej diagnostyki.",
+    "Lokalizacja medycznych działań ratowniczych: xx.xx.xxxx r. godz. xx:xx.",
+    "Osoba/y podróżująca/e samochodem decyzją ZRM nie wymagała/y dalszej hospitalizacji.",
+    "W wyniku zdarzenia nikt nie ucierpiał, nie wymagał udzielenia KPP",
+    "Nikt nie uskarża się na żadne dolegliwości - brak wskazań do KPP.",
+    "W momencie odjazdu JOP z miejsca zdarzenia, ZRM nie podjął decyzji o hospitalizacji."
   ],
   "🕒 Utrudnienia": [
     "Wydłużony czas dojazdu spowodowany był nieprecyzyjnym zgłoszeniem."
@@ -1501,13 +1506,6 @@ window.additionalGroupedOptions = {
   "🚓 Policja": [
     "ID sprawy Policji:",
     "Dalsze czynności prowadzi Policja."
-  ],
-  "🏥Medyczne":[
-    "Lokalizacja medycznych działań ratowniczych: xx.xx.xxxx r. godz. xx:xx.",
-    "Osoba/y podróżująca/e samochodem decyzją ZRM nie wymagała/y dalszej hospitalizacji.",
-    "W wyniku zdarzenia nikt nie ucierpiał, nie wymagał udzielenia KPP",
-    "Nikt nie uskarża się na żadne dolegliwości - brak wskazań do KPP.",
-    "W momencie odjazdu JOP z miejsca zdarzenia, ZRM nie podjął decyzji o hospitalizacji."
   ]
 };
 
