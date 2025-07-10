@@ -1384,8 +1384,6 @@ function toggleAdditionalForm() {
 function createDeviceSelect() {
   const container = document.getElementById("coForm");
   if (!container) return;
-
-  // Usuń stary select, jeśli istnieje
   const oldSelect = document.getElementById("deviceSelect");
   if (oldSelect) oldSelect.remove();
 
@@ -1451,12 +1449,12 @@ function enhanceCommaInput(id) {
 
 window.addEventListener("load", () => {
   ["aptNumber", "checkedFlats", "uncheckedFlats"].forEach(id => {
-    console.log("🔧 enhanceCommaInput init for", id); // ← Sprawdź, czy to się pojawi
+    console.log("🔧 enhanceCommaInput init for", id);
     enhanceCommaInput(id);
   });
 });
 
-function addEditableDispatchLine(text = "") {
+function addEditableDispatchLine(text = "", allowDuplicate = true) {
   const output = document.getElementById("dispatchOutput");
   if (!output) return;
 
@@ -1466,12 +1464,13 @@ function addEditableDispatchLine(text = "") {
 
   const editable = document.createElement("div");
   editable.className = "dispatch-line";
-  editable.contentEditable = true;
+  editable.contentEditable = "true";
   editable.style.border = "1px dashed #ccc";
   editable.style.padding = "4px";
   editable.style.display = "inline-block";
   editable.style.minWidth = "300px";
-  editable.style.userSelect = "text"; // tylko tekst jest zaznaczalny
+  editable.style.userSelect = "text";
+  editable.style.color = "#000"; // czarny tekst
   editable.textContent = text;
 
   const deleteBtn = document.createElement("button");
@@ -1500,9 +1499,19 @@ function addEditableDispatchLine(text = "") {
   duplicateBtn.setAttribute("contenteditable", "false");
   duplicateBtn.setAttribute("draggable", "false");
   duplicateBtn.setAttribute("unselectable", "on");
-  duplicateBtn.onclick = () => {
-    addEditableDispatchLine(editable.textContent.trim());
-  };
+
+  if (allowDuplicate) {
+    duplicateBtn.onclick = () => {
+      // przy powielaniu przekazujemy allowDuplicate = false, bo kopii nie chcemy powielać dalej
+      const cleanText = editable.textContent
+        .replace(/Siły i środki przedysponowane do innych zdarzeń:.*/i, "")
+        .trim();
+      addEditableDispatchLine(cleanText, false);
+    };
+  } else {
+    // ukryj przycisk powielania dla kopii
+    duplicateBtn.style.display = "none";
+  }
 
   lineWrapper.appendChild(editable);
   lineWrapper.appendChild(deleteBtn);
