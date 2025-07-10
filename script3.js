@@ -42,18 +42,6 @@ window.optionsMap = window.optionsMap || {
   ]
 };
 
-window.checkboxOptions = window.checkboxOptions || [
-  "ZRM", "Policja", "Straż Miejska", "Pogotowie gazowe",
-  "Patrol autostradowy", "Pomoc drogowa", "właściciel", "zgłaszający", "administracja", "brak zgłaszającego"
-];
-
-window.actionOptions = window.actionOptions || [
-  "zabezpieczeniu miejsca zdarzenia.",
-  "podaniu jednego prądu wody w natarciu.",
-  "sprawdzeniu pogorzeliska przy użyciu kamery termowizyjnej Flir - brak wzrostu temperatury względem otoczenia.",
-  "złożeniu pociętego drewna na terenie zielonym w miejscu bezpiecznym."
-];
-
 window.menu = document.getElementById("menu");
 window.myślniki = document.getElementById("myślniki");
 
@@ -162,51 +150,334 @@ function updateAllActionPunctuation() {
 
 function renderCheckboxMenu(textSpan) {
   window.menu.innerHTML = "";
-  let selected = JSON.parse(textSpan.dataset.selected || "[]");
 
-  window.checkboxOptions.forEach(option => {
-    const label = document.createElement("label");
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.value = option;
-    checkbox.checked = selected.includes(option);
+  const selected = new Set(JSON.parse(textSpan.dataset.selected || "[]"));
 
-    checkbox.addEventListener("change", () => {
-      delete textSpan.dataset.custom;
-      selected = checkbox.checked
-        ? [...new Set([...selected, option])]
-        : selected.filter(o => o !== option);
-      textSpan.dataset.selected = JSON.stringify(selected);
-      updateRespondersText(textSpan, selected);
+  const groupedCheckboxes = {
+    "👮‍♂️ Służby": ["ZRM", "Policja", "Straż Miejska", "Pogotowie gazowe", "Pomoc Drogowa", "Patrol Autostradowy"],
+    "🏢 Osoby cywilne": ["zgłaszający", "brak zgłaszającego", "właściciel", "administracja",],
+  };
+
+  const updateOutput = () => {
+    const list = Array.from(selected).join(", ");
+    textSpan.textContent = list ? list + "." : "";
+    textSpan.dataset.selected = JSON.stringify(Array.from(selected));
+    delete textSpan.dataset.custom;
+    updateRespondersText?.(textSpan, Array.from(selected));
+  };
+
+  Object.entries(groupedCheckboxes).forEach(([groupName, options]) => {
+    const groupLi = document.createElement("li");
+    groupLi.textContent = groupName;
+    groupLi.className = "category collapsed";
+
+    const subList = document.createElement("ul");
+    subList.className = "subcategory";
+
+    options.forEach(option => {
+      const li = document.createElement("li");
+      const label = document.createElement("label");
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.value = option;
+      checkbox.checked = selected.has(option);
+
+      checkbox.addEventListener("change", () => {
+        if (checkbox.checked) {
+          selected.add(option);
+        } else {
+          selected.delete(option);
+        }
+        updateOutput();
+      });
+
+      label.appendChild(checkbox);
+      label.appendChild(document.createTextNode(" " + option));
+      li.appendChild(label);
+      subList.appendChild(li);
     });
 
-    label.appendChild(checkbox);
-    label.appendChild(document.createTextNode(option));
-    window.menu.appendChild(label);
+    groupLi.onclick = (e) => {
+      e.stopPropagation();
+      const expanded = groupLi.classList.toggle("expanded");
+      groupLi.classList.toggle("collapsed", !expanded);
+      subList.classList.toggle("show", expanded);
+    };
+
+    window.menu.appendChild(groupLi);
+    window.menu.appendChild(subList);
   });
 
-  const li = document.createElement("li");
-  li.textContent = "Brak KPP";
-  li.addEventListener("click", () => {
-    textSpan.textContent = "Nikt nie uskarża się na żadne dolegliwości - brak wskazań do KPP.";
-    textSpan.dataset.selected = JSON.stringify(["KPP"]);
-    delete textSpan.dataset.custom;
-    window.menu.style.display = "none";
-    updateRespondersText(textSpan, ["KPP"]);
-  });
-  window.menu.appendChild(li);
+  const kppCategory = document.createElement("li");
+  kppCategory.textContent = "🩺 KPP";
+  kppCategory.className = "category collapsed";
 
-  const liBrakSluzb = document.createElement("li");
-  liBrakSluzb.textContent = "Sytuacja zgodna ze zgłoszeniem";
-  liBrakSluzb.addEventListener("click", () => {
-    const customText = "sytuacja zgodna ze zgłoszeniem.";
-    textSpan.textContent = customText;
-    textSpan.dataset.selected = JSON.stringify([]);
-    textSpan.dataset.custom = customText;
-    window.menu.style.display = "none";
-    updateRespondersText(textSpan, []);
+  const kppList = document.createElement("ul");
+  kppList.className = "subcategory";
+
+  const kppSentences = [
+    {
+      text: "Nikt nie uskarża się na żadne dolegliwości – brak wskazań do KPP.",
+      selected: ["KPP"]
+    },
+  ];
+
+  kppSentences.forEach(({ text, selected }) => {
+    const item = document.createElement("li");
+    item.textContent = text;
+    item.addEventListener("click", () => {
+      textSpan.dataset.custom = text;
+      textSpan.textContent = text;
+      textSpan.dataset.selected = JSON.stringify([]);
+      updateRespondersText?.(textSpan, []);
+    });
+    kppList.appendChild(item);
   });
-  window.menu.appendChild(liBrakSluzb);
+
+  kppCategory.onclick = (e) => {
+    e.stopPropagation();
+    const expanded = kppCategory.classList.toggle("expanded");
+    kppCategory.classList.toggle("collapsed", !expanded);
+    kppList.classList.toggle("show", expanded);
+  };
+
+  window.menu.appendChild(kppCategory);
+  window.menu.appendChild(kppList);
+
+  const sytuacjaCategory = document.createElement("li");
+  sytuacjaCategory.textContent = "📋 Sytuacja";
+  sytuacjaCategory.className = "category collapsed";
+
+  const sytuacjaList = document.createElement("ul");
+  sytuacjaList.className = "subcategory";
+
+  const sytuacjaSentences = [
+    {
+      text: "Sytuacja zgodna ze zgłoszeniem.",
+      selected: ["Sytuacja zgodna z zgłoszeniem"]
+    },
+    { text: "brak innych służb na miejscu",
+      selected: ["Brak innych służb"]
+    }
+  ];
+
+  sytuacjaSentences.forEach(({ text, selected }) => {
+    const item = document.createElement("li");
+    item.textContent = text;
+    item.addEventListener("click", () => {
+      textSpan.dataset.custom = text;
+      textSpan.textContent = text;
+      textSpan.dataset.selected = JSON.stringify([]);
+      updateRespondersText?.(textSpan, []);
+    });
+    sytuacjaList.appendChild(item);
+  });
+
+  sytuacjaCategory.onclick = (e) => {
+    e.stopPropagation();
+    const expanded = sytuacjaCategory.classList.toggle("expanded");
+    sytuacjaCategory.classList.toggle("collapsed", !expanded);
+    sytuacjaList.classList.toggle("show", expanded);
+  };
+
+  window.menu.appendChild(sytuacjaCategory);
+  window.menu.appendChild(sytuacjaList);
+
+  const kolizjaCategory = document.createElement("li");
+  kolizjaCategory.textContent = "🚘 Drogowe";
+  kolizjaCategory.className = "category collapsed";
+
+  const kolizjaList = document.createElement("ul");
+  kolizjaList.className = "subcategory";
+
+  const kolizjaSentences = [
+    {
+      text: "kolizja samochodu osobowego z barierą energochłonną.",
+      selected: ["kolizja z barierą"]
+    },
+    {
+      text: "kierowca poza pojazdem.",
+      selected: ["kierowca poza pojazdem"]
+    },
+    {
+      text: "plama płynów eksploatacyjnych na jezdni (wielkość plamy)",
+      selected: ["plama płynów eksploatacyjnych"]
+    },
+    {
+      text: "plama substancji powodujacej śliskość jezdni (wielkość plamy)",
+      selected: ["plama substancji"]
+    },
+    {
+      text: "prośba o zadysponowanie dodatkowych SiŚ (jakich)",
+      selected: ["dodatkowe siś"]
+    },
+  ];
+
+  kolizjaSentences.forEach(({ text, selected }) => {
+    const item = document.createElement("li");
+    item.textContent = text;
+    item.addEventListener("click", () => {
+      textSpan.dataset.custom = text;
+      textSpan.textContent = text;
+      textSpan.dataset.selected = JSON.stringify([]);
+      updateRespondersText?.(textSpan, []);
+    });
+    kolizjaList.appendChild(item);
+  });
+
+  kolizjaCategory.onclick = (e) => {
+    e.stopPropagation();
+    const expanded = kolizjaCategory.classList.toggle("expanded");
+    kolizjaCategory.classList.toggle("collapsed", !expanded);
+    kolizjaList.classList.toggle("show", expanded);
+  };
+
+  window.menu.appendChild(kolizjaCategory);
+  window.menu.appendChild(kolizjaList);
+
+  const pozarCategory = document.createElement("li");
+  pozarCategory.textContent = "🔥 Pożary";
+  pozarCategory.className = "category collapsed";
+
+  const pozarList = document.createElement("ul");
+  pozarList.className = "subcategory";
+
+  const pozarSentences = [
+    {
+      text: "brak zewnętrznych oznak pożaru",
+      selected: ["brak oznak"]
+    },
+    {
+      text: "pożar (traw,śmieci) na nieużytkach o wielkości __ mkw.",
+      selected: ["pożar traw"]
+    },
+    {
+      text: "prośba o zadysponowanie dodatkowych SiŚ (jakich)",
+      selected: ["dodatkowe siś"]
+    },
+    {
+      text: "mieszkanie przewietrzone przed przybyciem JOP",
+      selected: ["mieszkanie przewietrzone"]
+    },
+    {
+      text: "mieszkanie nr ___ zamknięte brak kontaktu z lokatorem/ką",
+      selected: ["mieszkanie zamknięte"]
+    },
+    {
+      text: "lokatorzy mieszkania na zewnątrz",
+      selected: ["lokatorzy na zewnątrz"]
+    },
+  ];
+
+  pozarSentences.forEach(({ text, selected }) => {
+    const item = document.createElement("li");
+    item.textContent = text;
+    item.addEventListener("click", () => {
+      textSpan.dataset.custom = text;
+      textSpan.textContent = text;
+      textSpan.dataset.selected = JSON.stringify([]);
+      updateRespondersText?.(textSpan, []);
+    });
+    pozarList.appendChild(item);
+  });
+
+  pozarCategory.onclick = (e) => {
+    e.stopPropagation();
+    const expanded = pozarCategory.classList.toggle("expanded");
+    pozarCategory.classList.toggle("collapsed", !expanded);
+    pozarList.classList.toggle("show", expanded);
+  };
+
+  window.menu.appendChild(pozarCategory);
+  window.menu.appendChild(pozarList);
+
+  const tlenekCategory = document.createElement("li");
+  tlenekCategory.textContent = "💨 Tlenek";
+  tlenekCategory.className = "category collapsed";
+
+  const tlenekList = document.createElement("ul");
+  tlenekList.className = "subcategory";
+
+  const tlenekSentences = [
+    {
+      text: "mieszkanie przewietrzone przed przybyciem JOP",
+      selected: ["mieszkanie przewietrzone"]
+    },
+    {
+      text: "mieszkanie nr ___ zamknięte brak kontaktu z lokatorem/ką",
+      selected: ["mieszkanie zamknięte"]
+    },
+    {
+      text: "lokatorzy mieszkania na zewnątrz",
+      selected: ["lokatorzy na zewnątrz"]
+    },
+    {
+      text: "prośba o zadysponowanie dodatkowych SiŚ (jakich)",
+      selected: ["dodatkowe siś"]
+    },
+  ];
+
+  tlenekSentences.forEach(({ text, selected }) => {
+    const item = document.createElement("li");
+    item.textContent = text;
+    item.addEventListener("click", () => {
+      textSpan.dataset.custom = text;
+      textSpan.textContent = text;
+      textSpan.dataset.selected = JSON.stringify([]);
+      updateRespondersText?.(textSpan, []);
+    });
+    tlenekList.appendChild(item);
+  });
+
+  tlenekCategory.onclick = (e) => {
+    e.stopPropagation();
+    const expanded = tlenekCategory.classList.toggle("expanded");
+    tlenekCategory.classList.toggle("collapsed", !expanded);
+    tlenekList.classList.toggle("show", expanded);
+  };
+
+  window.menu.appendChild(tlenekCategory);
+  window.menu.appendChild(tlenekList);
+
+  const otwarcieCategory = document.createElement("li");
+  otwarcieCategory.textContent = "🏢🔐 Otwarcie";
+  otwarcieCategory.className = "category collapsed";
+
+  const otwarcieList = document.createElement("ul");
+  otwarcieList.className = "subcategory";
+
+  const otwarcieSentences = [
+    {
+      text: "mieszkanie nr ___ zamknięte brak kontaktu z lokatorem/ką",
+      selected: ["mieszkanie zamknięte"]
+    },
+    {
+      text: "prośba o zadysponowanie dodatkowych SiŚ (jakich)",
+      selected: ["dodatkowe siś"]
+    },
+  ];
+
+  otwarcieSentences.forEach(({ text, selected }) => {
+    const item = document.createElement("li");
+    item.textContent = text;
+    item.addEventListener("click", () => {
+      textSpan.dataset.custom = text;
+      textSpan.textContent = text;
+      textSpan.dataset.selected = JSON.stringify([]);
+      updateRespondersText?.(textSpan, []);
+    });
+    otwarcieList.appendChild(item);
+  });
+
+  otwarcieCategory.onclick = (e) => {
+    e.stopPropagation();
+    const expanded = otwarcieCategory.classList.toggle("expanded");
+    otwarcieCategory.classList.toggle("collapsed", !expanded);
+    otwarcieList.classList.toggle("show", expanded);
+  };
+
+  window.menu.appendChild(otwarcieCategory);
+  window.menu.appendChild(otwarcieList);
 
   const manual = document.createElement("input");
   manual.type = "text";
@@ -219,7 +490,7 @@ function renderCheckboxMenu(textSpan) {
       textSpan.dataset.custom = formatted;
       textSpan.textContent = formatted;
       textSpan.dataset.selected = JSON.stringify([]);
-      updateRespondersText(textSpan, []);
+      updateRespondersText?.(textSpan, []);
     }
   });
   window.menu.appendChild(manual);
@@ -239,14 +510,74 @@ function setupInteractiveHandlers() {
 
       } else if (el.classList.contains("action-label")) {
         const textSpan = el.nextElementSibling;
-        window.actionOptions.forEach(option => {
-          const li = document.createElement("li");
-          li.textContent = option;
-          li.onclick = () => {
-            updateActionText(textSpan, option);
-            window.menu.style.display = "none";
+
+        const grouped = {
+          "🚗Drogowe": [
+            "zabezpieczeniu miejsca zdarzenia",
+            "oświetleniu terenu działań",
+            "odłączeniu klem akumulatora",
+            "sorpcji plamy powodującej śliskość jezdni - zużyty sorbent zebrano celem przekazania do utylizacji",
+            "uprzątnięciu elementów karoserii z jezdni",
+            "neutralizacji plamy płynów powodujących śliskość jezdni przy pomocy sintanu  - jezdnie zmyto jednym prądem wody",
+          ],
+          "🔥Pożary": [
+            "zabezpieczeniu miejsca zdarzenia",
+            "podaniu jednego prądu wody w natarciu",
+            "podaniu jednego prądu piany ciężkiej",
+            "sprawdzeniu pogorzeliska przy użyciu kamery termowizyjnej - brak wzrostu temperatury względem otoczenia",
+            "ugaszeniu palących się śmieci jednym prądem wody z hydronetki",
+          ],
+          "💨Tlenek": [
+            "zabezpieczeniu miejsca zdarzenia",
+            "wykonaniu pomiarów na obecność tlenku węgla w mieszkaniu nr ___ oraz w mieszkaniach w tym samym pionie mieszkalnym",
+          ],
+          "🏢🔐Otwarcie": [
+            "zabezpieczeniu miejsca zdarzenia",
+            "siłowym otwarciu mieszkania nr __",
+            "siłowym otwarciu mieszkania nr __ na prośbę Policji",
+            "wyłamaniu wkładki do mieszkania nr __",
+            "wyłamaniu wkładki do mieszkania nr __ na prośbę Policji "
+          ],
+          "🌳Drzewo": [
+            "zabezpieczeniu miejsca zdarzenia",
+            "usunięciu złamanej gałęzi przy pomocy ___",
+            "usunięciu złamanego konara przy pomocy ___",
+            "usunięciu złamanego drzewa przy pomocy ___",
+            "złożeniu pociętego drewna na terenie zielonym w miejscu bezpiecznym"
+          ],
+          "🐝OSP": [
+            "zabezpieczeniu miejsca zdarzenia",
+            "usunięciu gniazda os (jak, skąd)"
+          ]
+        };
+
+        Object.entries(grouped).forEach(([category, actions]) => {
+          const catItem = document.createElement("li");
+          catItem.textContent = category;
+          catItem.className = "category collapsed";
+
+          const subList = document.createElement("ul");
+          subList.className = "subcategory";
+
+          actions.forEach(action => {
+            const subItem = document.createElement("li");
+            subItem.textContent = action;
+            subItem.onclick = () => {
+              updateActionText(textSpan, action);
+              window.menu.style.display = "none";
+            };
+            subList.appendChild(subItem);
+          });
+
+          catItem.onclick = (e) => {
+            e.stopPropagation();
+            const expanded = catItem.classList.toggle("expanded");
+            catItem.classList.toggle("collapsed", !expanded);
+            subList.classList.toggle("show", expanded);
           };
-          window.menu.appendChild(li);
+
+          window.menu.appendChild(catItem);
+          window.menu.appendChild(subList);
         });
 
         const input = document.createElement("input");
@@ -786,18 +1117,37 @@ function setupInteractiveHandlers() {
         const span = el.nextElementSibling;
         window.menu.innerHTML = "";
 
-        window.additionalOptions.forEach(opt => {
-          const li = document.createElement("li");
-          li.textContent = opt;
-          li.onclick = () => {
-            span.textContent = opt;
-            window.menu.style.display = "none";
+        Object.entries(window.additionalGroupedOptions).forEach(([category, options]) => {
+          const catItem = document.createElement("li");
+          catItem.textContent = category;
+          catItem.className = "category collapsed";
 
-            if (opt.includes("Lokalizacja medycznych działań ratowniczych")) {
-              alert("Pamiętaj o wpisaniu nadzorującego medyczne czynności ratownicze!");
-            }
+          const subList = document.createElement("ul");
+          subList.className = "subcategory";
+
+          options.forEach(opt => {
+            const subItem = document.createElement("li");
+            subItem.textContent = opt;
+            subItem.onclick = () => {
+              span.textContent = opt;
+              window.menu.style.display = "none";
+
+              if (opt.includes("Lokalizacja medycznych działań ratowniczych")) {
+                alert("Pamiętaj o wpisaniu nadzorującego medyczne czynności ratownicze!");
+              }
+            };
+            subList.appendChild(subItem);
+          });
+
+          catItem.onclick = (e) => {
+            e.stopPropagation();
+            const expanded = catItem.classList.toggle("expanded");
+            catItem.classList.toggle("collapsed", !expanded);
+            subList.classList.toggle("show", expanded);
           };
-          window.menu.appendChild(li);
+
+          window.menu.appendChild(catItem);
+          window.menu.appendChild(subList);
         });
 
         const input = document.createElement("input");
@@ -809,28 +1159,6 @@ function setupInteractiveHandlers() {
         });
         window.menu.appendChild(input);
       }
-      else {
-        const id = el.id;
-        window.optionsMap[id]?.forEach(opt => {
-          const li = document.createElement("li");
-          li.textContent = opt + ":";
-          li.onclick = () => {
-            el.textContent = opt + ":";
-            window.menu.style.display = "none";
-          };
-          window.menu.appendChild(li);
-        });
-
-        const input = document.createElement("input");
-        input.type = "text";
-        input.placeholder = "(Zamienia nagłówek)";
-        input.addEventListener("click", ev => ev.stopPropagation());
-        input.addEventListener("input", () => {
-          el.textContent = input.value.trim() + ":";
-        });
-        window.menu.appendChild(input);
-      }
-      e.stopPropagation();
     };
   });
 }
@@ -1159,14 +1487,29 @@ function addAdditionalLine(isDuplicate = false) {
   setupInteractiveHandlers();
 }
 
-window.additionalOptions = [
-  "\nDokumentacji fotograficznej z miejsca zdarzenia nie sporządzono ze względu na fakt, iż usunięty konar nie przekraczał 30% korony drzewa.",
-  "\nWykonano dokumentację fotograficzną.",
-  "\nPrzybyły na miejsce ZRM po przebadaniu osoby poszkodowanej podjął decyzję o konieczności przetransportowania osoby do szpitala xxxxxxx celem dalszej diagnostyki.",
-  "\nWydłużony czas dojazdu spowodowany był nieprecyzyjnym zgłoszeniem.",
-  "\nLokalizacja medycznych działań ratowniczych: xx.xx.xxxx r. godz. xx:xx.",
-  "\nID sprawy Policji:",
-];
+window.additionalGroupedOptions = {
+  "📷 Dokumentacja": [
+    "Dokumentacji fotograficznej z miejsca zdarzenia nie sporządzono ze względu na fakt, iż usunięty konar nie przekraczał 30% korony drzewa.",
+    "Wykonano dokumentację fotograficzną."
+  ],
+  "🚑 Działania ZRM": [
+    "Przybyły na miejsce ZRM po przebadaniu osoby poszkodowanej podjął decyzję o konieczności przetransportowania osoby do szpitala xxxxxxx celem dalszej diagnostyki."
+  ],
+  "🕒 Utrudnienia": [
+    "Wydłużony czas dojazdu spowodowany był nieprecyzyjnym zgłoszeniem."
+  ],
+  "🚓 Policja": [
+    "ID sprawy Policji:",
+    "Dalsze czynności prowadzi Policja."
+  ],
+  "🏥Medyczne":[
+    "Lokalizacja medycznych działań ratowniczych: xx.xx.xxxx r. godz. xx:xx.",
+    "Osoba/y podróżująca/e samochodem decyzją ZRM nie wymagała/y dalszej hospitalizacji.",
+    "W wyniku zdarzenia nikt nie ucierpiał, nie wymagał udzielenia KPP",
+    "Nikt nie uskarża się na żadne dolegliwości - brak wskazań do KPP.",
+    "W momencie odjazdu JOP z miejsca zdarzenia, ZRM nie podjął decyzji o hospitalizacji."
+  ]
+};
 
 window.addEventListener("DOMContentLoaded", () => {
   addAdditionalLine(false);
