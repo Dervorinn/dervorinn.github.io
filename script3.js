@@ -512,8 +512,6 @@ function setupInteractiveHandlers() {
         const ulList = document.createElement("ul");
         ulList.className = "suggestion-list";
         ulList.style.position = "absolute";
-        ulList.style.background = "white";
-        ulList.style.border = "1px solid #ccc";
         ulList.style.maxHeight = "200px";
         ulList.style.overflowY = "auto";
         ulList.style.listStyle = "none";

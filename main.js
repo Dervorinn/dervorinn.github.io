@@ -1,30 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
   loadTab("tab3");
-  const logo = document.querySelector(".navbar-logo");
-  const span = document.getElementById("logoText");
-
-  const animateTextChange = (newText, newFontSize) => {
-    span.classList.add("fade-out");
-    setTimeout(() => {
-      span.textContent = newText;
-      span.style.fontSize = newFontSize;
-      span.classList.remove("fade-out");
-      span.classList.add("fade-in");
-      setTimeout(() => {
-        span.classList.remove("fade-in");
-      }, 300);
-    }, 300);
-  };
-
-  if (logo && span) {
-    logo.addEventListener("mouseenter", () => {
-      animateTextChange("APP", "14px");
-    });
-    logo.addEventListener("mouseleave", () => {
-      animateTextChange("K", "24px");
-    });
-  }
+  setupLogoAnimation();
+  setupDarkModeToggle();
+  setupClearButton();
 });
+
 function loadTab(tabName) {
   const tabContent = document.getElementById("tabContent");
   let tabDiv = document.getElementById(`container_${tabName}`);
@@ -82,6 +62,7 @@ function loadTabScript(tabName) {
     });
   }
 }
+
 function loadScript(src, callback) {
   const script = document.createElement("script");
   script.src = src;
@@ -94,11 +75,56 @@ function loadScript(src, callback) {
   };
   document.body.appendChild(script);
 }
-document.addEventListener("DOMContentLoaded", () => {
+
+function setupLogoAnimation() {
+  const logo = document.querySelector(".navbar-logo");
+  const span = document.getElementById("logoText");
+
+  const animateTextChange = (newText, newFontSize) => {
+    span.classList.add("fade-out");
+    setTimeout(() => {
+      span.textContent = newText;
+      span.style.fontSize = newFontSize;
+      span.classList.remove("fade-out");
+      span.classList.add("fade-in");
+      setTimeout(() => {
+        span.classList.remove("fade-in");
+      }, 300);
+    }, 300);
+  };
+
+  if (logo && span) {
+    logo.addEventListener("mouseenter", () => animateTextChange("APP", "14px"));
+    logo.addEventListener("mouseleave", () => animateTextChange("K", "24px"));
+  }
+}
+
+// Tryb ciemny z zapamiętaniem
+function setupDarkModeToggle() {
+  const toggle = document.getElementById("darkModeToggle");
+
+  // Wczytaj tryb z localStorage
+  if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark-mode");
+    toggle.checked = true;
+  }
+
+  toggle.addEventListener("change", () => {
+    if (toggle.checked) {
+      document.body.classList.add("dark-mode");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.remove("dark-mode");
+      localStorage.setItem("theme", "light");
+    }
+  });
+}
+
+function setupClearButton() {
   const btnClear = document.getElementById("btnClear");
   if (btnClear) {
     btnClear.addEventListener("click", () => {
       location.reload();
     });
   }
-});
+}

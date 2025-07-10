@@ -167,9 +167,11 @@ h1 {
 }
 
 .navbar-right {
-  text-align: right;
-  font-size: 12px;
-  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 14px;
 }
 
 .context-menu {
@@ -259,7 +261,7 @@ h1 {
 
 .context-menu label {
   font-size: 14px;
-  color: #111;
+  color: #000000;
   cursor: pointer;
   padding-left: 10px;
   display: inline-block;
@@ -276,7 +278,7 @@ h1 {
   padding: 6px 10px;
   background: rgba(255, 255, 255, 0.6);
   border: 1px solid rgba(0, 0, 0, 0.1);
-  color: #111;
+  color: #ffffff;
   border-radius: 6px;
 }
 
@@ -540,11 +542,7 @@ h1 {
   transition: background 0.3s ease, transform 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   user-select: none;
-  margin-top: 12px;
   align-self: center;
-  position: absolute;
-  right: 170px;
-  align-items: flex-center;
 }
 
 #btnClear:hover {
@@ -556,4 +554,144 @@ h1 {
   background-color: #1a1a1a;
   transform: scale(0.98);
   box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.05);
+}
+
+.separator {
+  width: 1px;
+  height: 32px;
+  background-color: #ccc;
+  margin: 0 10px;
+  opacity: 0.6;
+}
+
+.theme-toggle {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+}
+
+.theme-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background-color 0.4s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px;
+}
+
+.slider .icon {
+  width: 16px;
+  height: 16px;
+  color: #fff;
+  opacity: 0.4;
+  transition: opacity 0.3s ease;
+}
+
+.slider .circle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  left: 4px;
+  top: 4px;
+  transition: transform 0.4s ease;
+  z-index: 1;
+}
+
+input:checked+.slider {
+  background-color: #333;
+}
+
+input:checked+.slider .moon {
+  opacity: 1;
+}
+
+input:not(:checked)+.slider .sun {
+  opacity: 1;
+}
+
+input:checked+.slider .circle {
+  transform: translateX(24px);
+}
+
+body.dark-mode {
+  background: #121212;
+  color: #f0f0f0;
+}
+
+body.dark-mode .context-menu {
+  background: rgba(34, 34, 34, 0.9);
+  color: #f0f0f0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .context-menu li:hover,
+body.dark-mode .context-menu label:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .editable {
+  background: #1f1f1f;
+  color: #f0f0f0;
+  border: 1px solid #444;
+}
+
+body.dark-mode .copy-button,
+body.dark-mode .co-toggle-label,
+body.dark-mode #btnClear {
+  background-color: #333;
+  color: white;
+  border: 1px solid #888;
+}
+
+body.dark-mode .interactive {
+  background-color: #333;
+  color: white;
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background-color: #222;
+  color: #eee;
+  border: 1px solid #555;
+}
+
+body.dark-mode .form-group label {
+  color: #ddd;
+}
+
+body.dark-mode .slider {
+  background-color: #666;
+}
+
+body.dark-mode .context-menu label {
+  color: #ffffff;
+}
+
+.suggestion-list {
+  background: white;
+  border: 1px solid #ccc;
+  color: black;
+}
+
+body.dark-mode .suggestion-list {
+  background: #1e1e1e;
+  border: 1px solid #555;
+  color: #eee;
 }
