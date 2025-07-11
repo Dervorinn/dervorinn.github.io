@@ -64,7 +64,7 @@ h1 {
 .navbar-logo-obwoluta {
   position: absolute;
   left: 20px;
-  top: 100%;
+  top: 80%;
   transform: translateY(-80%) scale(0);
   width: 80px;
   height: 80px;
@@ -172,6 +172,10 @@ h1 {
   gap: 12px;
   font-family: "Segoe UI", sans-serif;
   font-size: 14px;
+  background-color: #161616;
+  border: 1px solid #202020;
+  border-radius: 10px;
+  padding: 5px 10px;
 }
 
 .context-menu {
@@ -779,4 +783,78 @@ body.dark-mode .context-menu .subcategory li:hover {
 }
 .context-menu .subcategory li {
   padding-left: 24px;
+}
+
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+  background-color: #d32f2f;
+}
+
+body.dark-mode .delete-btn {
+  background-color: #b71c1c;
+  color: #fff;
+}
+
+.add-line-btn {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: "Segoe UI", sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  margin: 6px;
+}
+
+.add-line-btn:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-1px);
+}
+
+.add-line-btn:active {
+  background-color: #e0e0e0;
+  transform: scale(0.98);
+}
+
+body.dark-mode .add-line-btn {
+  background-color: #2a2a2a;
+  color: #f0f0f0;
+  border: 1px solid #444;
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .add-line-btn:hover {
+  background-color: #333;
+}
+
+body.dark-mode .add-line-btn:active {
+  background-color: #222;
+}
+
+.dispatch-line {
+  color: #000;
+  border: 1px dashed #ccc;
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
+  font-size: 15px;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body.dark-mode .dispatch-line {
+  color: #fff;
+  border-color: #666;
 }

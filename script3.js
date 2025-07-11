@@ -1531,10 +1531,6 @@ window.additionalGroupedOptions = {
   ]
 };
 
-window.addEventListener("DOMContentLoaded", () => {
-  addAdditionalLine(false);
-});
-
 function toggleCOForm() {
   const checkbox = document.getElementById("coCheckbox");
   const form = document.getElementById("coForm");
@@ -1681,8 +1677,6 @@ function generateDispatchText() {
 
   const reportText = reportSuffix ? ` nr meldunku ${reportPrefix}${reportSuffix}.` : "";
   const fullText = `Siły i środki przedysponowane do innych zdarzeń:\n- ${formatted}: ${vehicle}${reportText}`;
-
-  // 🔄 aktualizuj pierwszą linię, jeśli istnieje — jeśli nie, dodaj
   const firstLine = output.querySelector(".dispatch-line");
   if (firstLine) {
     firstLine.textContent = fullText;
@@ -1733,14 +1727,10 @@ function toggleDispatchForm() {
 function toggleAdditionalForm() {
   const checkbox = document.getElementById("additionalToggle");
   const container = document.getElementById("additionalContainer");
+  container.style.display = checkbox.checked ? "block" : "none";
 
-  if (checkbox.checked) {
-    if (container.children.length === 0) {
-      addAdditionalLine();
-    }
-    container.style.display = "block";
-  } else {
-    container.style.display = "none";
+  if (checkbox.checked && container.children.length === 0) {
+    addAdditionalLine(false);
   }
 }
 
@@ -1833,12 +1823,13 @@ function addEditableDispatchLine(text = "", allowDuplicate = true) {
   editable.style.display = "inline-block";
   editable.style.minWidth = "300px";
   editable.style.userSelect = "text";
-  editable.style.color = "#000"; // czarny tekst
+  editable.classList.add("dispatch-line");
   editable.textContent = text;
 
   const deleteBtn = document.createElement("button");
   deleteBtn.textContent = "🗑️";
   deleteBtn.title = "Usuń";
+  deleteBtn.className = "delete-btn";
   Object.assign(deleteBtn.style, {
     marginLeft: "8px",
     userSelect: "none",
@@ -1853,6 +1844,7 @@ function addEditableDispatchLine(text = "", allowDuplicate = true) {
   const duplicateBtn = document.createElement("button");
   duplicateBtn.textContent = "➕";
   duplicateBtn.title = "Powiel";
+  duplicateBtn.className = "add-line-btn";
   Object.assign(duplicateBtn.style, {
     marginLeft: "4px",
     userSelect: "none",
@@ -1900,13 +1892,13 @@ function initializeTab3() {
   addHydrantLine();
   loadHydrantJsonAutomatically();
   fetchWeatherFromIMGW();
-  addAdditionalLine(false);
   setupDispatchListeners();
-  toggleAdditionalForm();
   createDeviceSelect();
+
   const addResponderBtn = document.createElement("button");
   addResponderBtn.textContent = "➕ Dodaj linię";
   addResponderBtn.onclick = addResponderLine;
+  addResponderBtn.className = "add-line-btn";
   addResponderBtn.setAttribute("contenteditable", "false");
   addResponderBtn.setAttribute("draggable", "false");
   addResponderBtn.setAttribute("unselectable", "on");
@@ -1921,6 +1913,7 @@ function initializeTab3() {
   const addActionBtn = document.createElement("button");
   addActionBtn.textContent = "➕ Dodaj linię";
   addActionBtn.onclick = addActionLine;
+  addActionBtn.className = "add-line-btn";
   addActionBtn.setAttribute("contenteditable", "false");
   addActionBtn.setAttribute("draggable", "false");
   addActionBtn.setAttribute("unselectable", "on");

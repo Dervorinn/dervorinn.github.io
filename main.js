@@ -99,16 +99,12 @@ function setupLogoAnimation() {
   }
 }
 
-// Tryb ciemny z zapamiętaniem
 function setupDarkModeToggle() {
   const toggle = document.getElementById("darkModeToggle");
-
-  // Wczytaj tryb z localStorage
   if (localStorage.getItem("theme") === "dark") {
     document.body.classList.add("dark-mode");
     toggle.checked = true;
   }
-
   toggle.addEventListener("change", () => {
     if (toggle.checked) {
       document.body.classList.add("dark-mode");
