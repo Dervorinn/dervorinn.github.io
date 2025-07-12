@@ -172,12 +172,32 @@ function renderCheckboxMenu(textSpan) {
     groupLi.className = "category collapsed";
 
     const subList = document.createElement("ul");
+    subList.style.listStyle = "none";
+    subList.style.paddingLeft = "0";
+    subList.style.margin = "0";
+    subList.style.width = "100%";
+    subList.style.boxSizing = "border-box";
     subList.className = "subcategory";
 
     options.forEach(option => {
       const li = document.createElement("li");
+      li.style.listStyle = "none";
+      li.style.margin = "0";
+      li.style.padding = "0";
+
       const label = document.createElement("label");
+      label.style.display = "flex";
+      label.style.alignItems = "center";
+      label.style.gap = "8px";
+      label.style.padding = "6px 10px";
+      label.style.width = "100%";
+      label.style.boxSizing = "border-box";
+      label.style.textAlign = "left";
+
       const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.value = option;
+      checkbox.checked = selected.has(option);
       checkbox.type = "checkbox";
       checkbox.value = option;
       checkbox.checked = selected.has(option);
